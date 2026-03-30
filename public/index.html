@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITMature Pro — Diagnóstico de Maturidade de TI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090F;--s1:#10111A;--s2:#15172A;--s3:#1C1E32;--s4:#23263D;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--border3:rgba(255,255,255,0.2);
+  --text:#E8EAF6;--t2:#8B92B8;--t3:#4A5070;
+  --blue:#5B8DEF;--blue2:#3A6AD4;--blue3:rgba(91,141,239,0.15);
+  --green:#3DD68C;--green2:rgba(61,214,140,0.15);
+  --amber:#F0A500;--amber2:rgba(240,165,0,0.15);
+  --red:#EF5350;--red2:rgba(239,83,80,0.15);
+  --purple:#9575CD;--purple2:rgba(149,117,205,0.15);
+  --teal:#26C6DA;--teal2:rgba(38,198,218,0.15);
+  --r:10px;--r-sm:6px;--r-lg:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh}
+.sidebar{width:240px;min-width:240px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.logo-wrap{padding:22px 20px 16px;border-bottom:1px solid var(--border)}
+.logo-wrap h1{font-size:19px;font-weight:800;letter-spacing:-0.5px}
+.logo-wrap h1 em{color:var(--blue);font-style:normal}
+.logo-wrap small{font-size:10px;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;display:block;margin-top:2px}
+.nav{flex:1;padding:14px 10px;overflow-y:auto}
+.nav-grp{margin-bottom:20px}
+.nav-lbl{font-size:9.5px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;padding:0 10px 6px;font-weight:600}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;font-size:13px;color:var(--t2);border:none;background:none;width:100%;text-align:left;transition:.15s;margin-bottom:1px}
+.ni:hover{background:var(--s3);color:var(--text)}
+.ni.on{background:rgba(91,141,239,.14);color:var(--blue)}
+.ni svg{width:15px;height:15px;flex-shrink:0;opacity:.8}
+.ni.on svg{opacity:1}
+.nbadge{margin-left:auto;background:var(--blue);color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:10px}
+.sidebar-foot{padding:14px;border-top:1px solid var(--border)}
+.user-pill{display:flex;align-items:center;gap:9px;padding:9px 10px;background:var(--s2);border-radius:var(--r-sm);cursor:pointer}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.user-pill p{font-size:12.5px;font-weight:500;line-height:1.2}
+.user-pill span{font-size:10.5px;color:var(--t3)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:16px 28px;border-bottom:1px solid var(--border);background:var(--s1);display:flex;align-items:center;gap:12px}
+.topbar h2{font-size:16px;font-weight:700;flex:1}
+.content{flex:1;overflow-y:auto;padding:28px}
+.page{display:none}.page.on{display:block}
+
+/* ── BUTTONS ── */
+.btn{padding:7px 16px;border-radius:var(--r-sm);font-size:12.5px;font-weight:500;cursor:pointer;border:none;transition:.15s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue2)}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--border2)}.btn-ghost:hover{background:var(--s3);color:var(--text)}
+.btn-success{background:var(--green2);color:var(--green);border:1px solid rgba(61,214,140,.25)}
+.btn-danger{background:var(--red2);color:var(--red);border:1px solid rgba(239,83,80,.25)}
+.btn-purple{background:var(--purple2);color:var(--purple);border:1px solid rgba(149,117,205,.3)}
+.btn-lg{padding:10px 22px;font-size:14px}
+
+/* ── CARDS ── */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:18px}
+.card-sm{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* ── METRICS ── */
+.met{background:var(--s2);border-radius:var(--r);padding:16px;border:1px solid var(--border)}
+.met .v{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;margin-bottom:3px}
+.met .l{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.met.blue .v{color:var(--blue)}.met.green .v{color:var(--green)}
+.met.amber .v{color:var(--amber)}.met.purple .v{color:var(--purple)}
+
+/* ── FORMS ── */
+.fg{margin-bottom:16px}
+.fl{font-size:11px;font-weight:600;color:var(--t2);letter-spacing:.4px;text-transform:uppercase;display:block;margin-bottom:5px}
+.fi,.fs,.fta{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:9px 13px;font-size:13.5px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:.15s}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(91,141,239,.1)}
+.fs option{background:var(--s2)}.fta{resize:vertical;min-height:72px;line-height:1.5}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:9px 14px;font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--t2);vertical-align:middle}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td:first-child{color:var(--text);font-weight:500}
+
+/* ── TAGS ── */
+.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.tag-blue{background:var(--blue3);color:var(--blue)}
+.tag-green{background:var(--green2);color:var(--green)}
+.tag-amber{background:var(--amber2);color:var(--amber)}
+.tag-red{background:var(--red2);color:var(--red)}
+.tag-purple{background:var(--purple2);color:var(--purple)}
+.tag-teal{background:var(--teal2);color:var(--teal)}
+
+/* ── MODAL ── */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.ov.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:var(--r-lg);padding:28px;width:600px;max-width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:22px}
+.mc{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:18px;line-height:1;padding:4px}
+.mc:hover{color:var(--text)}
+.mf{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+
+/* ── LOGIN ── */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:200}
+.login-box{background:var(--s1);border:1px solid var(--border2);border-radius:var(--r-lg);padding:44px 40px;width:420px;max-width:calc(100vw - 32px)}
+.login-logo{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;text-align:center;margin-bottom:6px}
+.login-logo em{color:var(--blue);font-style:normal}
+.login-tagline{text-align:center;font-size:12px;color:var(--t3);margin-bottom:32px;line-height:1.6}
+.tabs-r{display:flex;background:var(--s2);border-radius:var(--r-sm);padding:3px;margin-bottom:24px}
+.tab-r{flex:1;padding:7px;text-align:center;border-radius:5px;cursor:pointer;font-size:12.5px;font-weight:500;color:var(--t3);border:none;background:none;transition:.15s;font-family:'Inter',sans-serif}
+.tab-r.on{background:var(--s4);color:var(--text)}
+
+/* ── ASSESSMENT ── */
+.prog-wrap{margin-bottom:24px}
+.prog-info{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;color:var(--t2)}
+.prog-bar{height:5px;background:var(--s3);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;background:var(--blue);border-radius:10px;transition:.4s}
+.q-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;margin-bottom:14px}
+.q-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.q-num{font-size:10px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase}
+.q-domain{font-size:10px;padding:2px 8px;border-radius:10px}
+.q-indicator{font-size:10px;color:var(--teal);background:var(--teal2);padding:2px 8px;border-radius:10px}
+.q-text{font-size:15px;font-weight:500;margin-bottom:4px;line-height:1.5}
+.q-hint{font-size:12px;color:var(--t3);margin-bottom:18px;line-height:1.5}
+.opts{display:grid;gap:7px}
+.opt{padding:11px 14px;border-radius:var(--r-sm);border:1px solid var(--border2);cursor:pointer;font-size:13px;color:var(--t2);transition:.15s;text-align:left;background:none;width:100%;display:flex;align-items:center;gap:10px}
+.opt:hover{border-color:var(--border3);color:var(--text);background:var(--s2)}
+.opt.sel{border-color:var(--blue);color:var(--blue);background:rgba(91,141,239,.08)}
+.opt-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.sel .opt-dot::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.opt-score{margin-left:auto;font-size:10px;opacity:.5;font-weight:600}
+.opt.sel .opt-score{opacity:.8}
+
+/* evidence/action required */
+.ev-req{margin-top:12px;padding:12px 14px;background:var(--s2);border-radius:var(--r-sm);border-left:3px solid var(--green);animation:fadeIn .3s}
+.ev-req.action{border-left-color:var(--amber)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.ev-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.ev-label.ev{color:var(--green)}.ev-label.ac{color:var(--amber)}
+
+/* ── REPORT ── */
+.level-badge{padding:24px;border-radius:var(--r-lg);margin-bottom:22px;position:relative;overflow:hidden;border:1px solid}
+.level-badge.artesanal{background:rgba(239,83,80,.08);border-color:rgba(239,83,80,.3)}
+.level-badge.eficiente{background:rgba(240,165,0,.08);border-color:rgba(240,165,0,.3)}
+.level-badge.eficaz{background:rgba(91,141,239,.08);border-color:rgba(91,141,239,.3)}
+.level-badge.estrategico{background:rgba(61,214,140,.08);border-color:rgba(61,214,140,.3)}
+.level-badge h2{font-size:22px;font-weight:800}
+.level-badge .pct{font-family:'Syne',sans-serif;font-size:52px;font-weight:800;line-height:1;float:right;opacity:.25}
+.level-badge p{font-size:13.5px;line-height:1.65;color:var(--t2);margin-top:8px}
+.domain-row{margin-bottom:14px}
+.domain-row .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.domain-row .name{font-size:13px;font-weight:500}
+.domain-row .pct-lbl{font-size:12px;color:var(--t2)}
+.bar-wrap{height:7px;background:var(--s3);border-radius:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:10px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+
+/* AI analysis block */
+.ai-block{background:var(--s2);border:1px solid rgba(149,117,205,.3);border-radius:var(--r-lg);padding:22px;margin-bottom:18px}
+.ai-block .ai-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.ai-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--purple2);border:1px solid rgba(149,117,205,.35);border-radius:20px;font-size:10.5px;font-weight:600;color:var(--purple)}
+.ai-text{font-size:13.5px;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+.ai-text strong{color:var(--text);font-weight:600}
+
+/* Evidence table in report */
+.ev-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.ev-table th{text-align:left;padding:7px 10px;font-size:9.5px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.ev-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--t2);vertical-align:top}
+.ev-table tr:last-child td{border-bottom:none}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.toast{background:var(--s1);border:1px solid var(--border2);border-radius:var(--r);padding:12px 16px;font-size:12.5px;font-weight:500;display:flex;align-items:center;gap:9px;max-width:300px;animation:slideIn .25s ease;pointer-events:auto}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.s{border-color:rgba(61,214,140,.35);color:var(--green)}
+.toast.e{border-color:rgba(239,83,80,.35);color:var(--red)}
+.toast.i{border-color:rgba(91,141,239,.35);color:var(--blue)}
+
+/* ── SPINNER ── */
+.spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(91,141,239,.25);border-top-color:var(--blue);border-radius:50%;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.full-spin{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:60px;color:var(--t3);font-size:13px}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:50px 20px;color:var(--t3)}
+.empty .ico{font-size:36px;margin-bottom:12px;opacity:.3}
+.empty p{font-size:13px;margin-top:6px}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.divider{height:1px;background:var(--border);margin:18px 0}
+.sec-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div class="login-screen" id="LS">
+  <div class="login-box">
+    <div class="login-logo">IT<em>Mature</em> <span style="font-size:11px;background:var(--blue3);color:var(--blue);padding:2px 7px;border-radius:10px;vertical-align:middle;font-weight:600">PRO</span></div>
+    <div class="login-tagline">Diagnóstico de Maturidade de TI<br>Artesanal · Eficiente · Eficaz · Estratégico</div>
+    <div class="tabs-r" id="authTabs">
+      <button class="tab-r on" onclick="switchAuth('login')">Entrar</button>
+      <button class="tab-r" onclick="switchAuth('reg')">Cadastrar</button>
+    </div>
+    <div id="loginForm">
+      <div class="fg"><label class="fl">E-mail</label><input class="fi" id="lEmail" type="email" value="admin@itmature.com" placeholder="seu@email.com"></div>
+      <div class="fg"><label class="fl">Senha</label><input class="fi" id="lPass" type="password" value="123456" placeholder="••••••••"></div>
+      <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:8px" onclick="doLogin()">Entrar na plataforma</button>
+      <p style="text-align:center;font-size:11px;color:var(--t3);margin-top:14px">Demo: admin@itmature.com / 123456</p>
+    </div>
+    <div id="regForm" style="display:none">
+      <div class="g2">
+        <div class="fg"><label class="fl">Nome completo</label><input class="fi" id="rName" type="text" placeholder="Seu nome"></div>
+        <div class="fg"><label class="fl">Perfil de acesso</label>
+          <select class="fs" id="rRole">
+            <option value="admin">Administrador</option>
+            <option value="consultor">Consultor</option>
+            <option value="avaliador">Avaliador</option>
+            <option value="viewer">Visualizador</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">E-mail</label><input class="fi" id="rEmail" type="email" placeholder="seu@email.com"></div>
+      <div class="fg"><label class="fl">Senha</label><input class="fi" id="rPass" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:8px" onclick="doRegister()">Criar conta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div class="app" id="APP" style="display:none">
+  <div class="sidebar">
+    <div class="logo-wrap">
+      <h1>IT<em style="color:var(--blue);font-style:normal">Mature</em> <sup style="font-size:9px;color:var(--blue);vertical-align:super">PRO</sup></h1>
+      <small>Maturidade de TI</small>
+    </div>
+    <nav class="nav">
+      <div class="nav-grp">
+        <div class="nav-lbl">Geral</div>
+        <button class="ni on" onclick="goPage('dash')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
+        </button>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">Cadastros</div>
+        <button class="ni" onclick="goPage('users')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Usuários
+        </button>
+        <button class="ni" onclick="goPage('companies')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Empresas
+        </button>
+        <button class="ni" onclick="goPage('questions')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Questões
+          <span class="nbadge" id="qBadge">0</span>
+        </button>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">Avaliação</div>
+        <button class="ni" onclick="goPage('apply')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Aplicar Avaliação
+        </button>
+        <button class="ni" onclick="goPage('reports')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>Relatórios
+          <span class="nbadge" id="rBadge" style="background:var(--green)">0</span>
+        </button>
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-pill" onclick="doLogout()">
+        <div class="av" id="sideAv" style="background:var(--blue2)"></div>
+        <div><p id="sideName">Usuário</p><span id="sideRole">Perfil</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h2 id="pageTitle">Dashboard</h2>
+      <div id="topActions"></div>
+    </div>
+    <div class="content" id="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page on" id="p-dash">
+        <div class="g4" style="margin-bottom:18px">
+          <div class="met blue"><div class="v" id="d-avs">0</div><div class="l">Avaliações realizadas</div></div>
+          <div class="met green"><div class="v" id="d-comp">0</div><div class="l">Empresas avaliadas</div></div>
+          <div class="met amber"><div class="v" id="d-avg">—</div><div class="l">Score médio geral</div></div>
+          <div class="met purple"><div class="v" id="d-qs">0</div><div class="l">Questões cadastradas</div></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="sec-title">📊 Distribuição por Nível</div>
+            <canvas id="levelChart" height="180"></canvas>
+          </div>
+          <div class="card">
+            <div class="sec-title">🏢 Últimas Avaliações</div>
+            <div id="recentList"><div class="empty"><div class="ico">📋</div><p>Nenhuma avaliação ainda</p></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-title">📖 Níveis de Maturidade de TI</div>
+          <div class="g4" style="gap:12px">
+            <div style="padding:16px;background:rgba(239,83,80,.06);border:1px solid rgba(239,83,80,.2);border-radius:var(--r);border-left:3px solid var(--red)">
+              <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px">🔥 Artesanal</div>
+              <div style="font-size:11px;color:var(--t2);line-height:1.6">0 – 40%<br>Reativo, apaga incêndios, processos manuais, alta dependência de pessoas-chave.</div>
+            </div>
+            <div style="padding:16px;background:rgba(240,165,0,.06);border:1px solid rgba(240,165,0,.2);border-radius:var(--r);border-left:3px solid var(--amber)">
+              <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px">⚙️ Eficiente</div>
+              <div style="font-size:11px;color:var(--t2);line-height:1.6">40 – 70%<br>Proativo, ITIL básico, padronização inicial, monitoramento e segurança em evolução.</div>
+            </div>
+            <div style="padding:16px;background:rgba(91,141,239,.06);border:1px solid rgba(91,141,239,.2);border-radius:var(--r);border-left:3px solid var(--blue)">
+              <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px">🎯 Eficaz</div>
+              <div style="font-size:11px;color:var(--t2);line-height:1.6">70 – 90%<br>Otimizado, alinhado à estratégia, automação, governança forte, cultura de melhoria.</div>
+            </div>
+            <div style="padding:16px;background:rgba(61,214,140,.06);border:1px solid rgba(61,214,140,.2);border-radius:var(--r);border-left:3px solid var(--green)">
+              <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px">🚀 Estratégico</div>
+              <div style="font-size:11px;color:var(--t2);line-height:1.6">90 – 100%<br>TI como parceiro estratégico, altamente automatizado, inovação contínua, resiliência.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── USERS ── -->
+      <div class="page" id="p-users">
+        <div class="card">
+          <table class="tbl" id="usersTable">
+            <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Criado em</th><th>Ações</th></tr></thead>
+            <tbody id="usersTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── COMPANIES ── -->
+      <div class="page" id="p-companies">
+        <div class="card">
+          <table class="tbl">
+            <thead><tr><th>Empresa</th><th>CNPJ</th><th>Setor</th><th>Porte</th><th>Avaliações</th><th>Ações</th></tr></thead>
+            <tbody id="compTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── QUESTIONS ── -->
+      <div class="page" id="p-questions">
+        <div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <select class="fs" style="width:180px" id="qFilterDomain" onchange="renderQuestions()">
+            <option value="">Todos os domínios</option>
+          </select>
+          <select class="fs" style="width:160px" id="qFilterInd" onchange="renderQuestions()">
+            <option value="">Todos indicadores</option>
+            <option>Maturidade dos processos</option>
+            <option>Uso de ferramentas</option>
+            <option>Nível de serviço</option>
+            <option>Alinhamento estratégico</option>
+            <option>Governança de TI</option>
+            <option>Gestão de riscos</option>
+            <option>Cultura de TI</option>
+          </select>
+        </div>
+        <div class="card">
+          <table class="tbl">
+            <thead><tr><th>#</th><th>Questão</th><th>Domínio</th><th>Indicador</th><th>Peso</th><th>Ações</th></tr></thead>
+            <tbody id="qTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── APPLY ASSESSMENT ── -->
+      <div class="page" id="p-apply">
+        <div id="applySetup">
+          <div class="card" style="max-width:560px">
+            <div class="sec-title">🏢 Configurar Avaliação</div>
+            <div class="fg"><label class="fl">Empresa cliente</label>
+              <select class="fs" id="selCompany"><option value="">Selecione a empresa...</option></select>
+            </div>
+            <div class="fg"><label class="fl">Avaliador responsável</label>
+              <select class="fs" id="selEval"><option value="">Selecione o avaliador...</option></select>
+            </div>
+            <div class="fg"><label class="fl">Observações iniciais</label>
+              <textarea class="fta" id="applyObs" placeholder="Contexto da avaliação, período, equipe envolvida..."></textarea>
+            </div>
+            <div style="background:var(--amber2);border:1px solid rgba(240,165,0,.25);border-radius:var(--r-sm);padding:14px;margin-bottom:18px">
+              <p style="font-size:12px;color:var(--amber);font-weight:600;margin-bottom:4px">⚠️ Importante — Honestidade na avaliação</p>
+              <p style="font-size:11.5px;color:var(--t2);line-height:1.6">Para toda resposta <strong style="color:var(--green)">SIM</strong>, forneça uma evidência comprobatória. Para toda resposta <strong style="color:var(--red)">NÃO</strong>, defina uma providência ou plano de ação. Respostas mascaradas comprometem o diagnóstico real. <em>"Não dá pra gerenciar o que não se consegue medir."</em></p>
+            </div>
+            <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center" onclick="startAssessment()">Iniciar Avaliação →</button>
+          </div>
+        </div>
+        <div id="applyAssessment" style="display:none"></div>
+        <div id="applyDone" style="display:none;max-width:500px">
+          <div class="card" style="text-align:center;padding:40px">
+            <div style="font-size:48px;margin-bottom:16px">✅</div>
+            <h2 style="font-size:20px;margin-bottom:10px">Avaliação concluída!</h2>
+            <p style="font-size:13.5px;color:var(--t2);margin-bottom:24px">As respostas foram salvas. O relatório com análise de IA está disponível na seção Relatórios.</p>
+            <div style="display:flex;gap:10px;justify-content:center">
+              <button class="btn btn-primary" onclick="goPage('reports')">Ver Relatório →</button>
+              <button class="btn btn-ghost" onclick="goPage('apply')">Nova Avaliação</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── REPORTS ── -->
+      <div class="page" id="p-reports">
+        <div id="reportList"></div>
+        <div id="reportDetail" style="display:none"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODALS ── -->
+<div class="ov" id="modalUser">
+  <div class="modal" style="width:520px">
+    <button class="mc" onclick="closeModal('modalUser')">✕</button>
+    <div class="modal-title" id="muTitle">Novo Usuário</div>
+    <div class="g2">
+      <div class="fg"><label class="fl">Nome completo</label><input class="fi" id="mu-name" type="text"></div>
+      <div class="fg"><label class="fl">Perfil</label>
+        <select class="fs" id="mu-role">
+          <option value="admin">Administrador</option>
+          <option value="consultor">Consultor</option>
+          <option value="avaliador">Avaliador</option>
+          <option value="viewer">Visualizador</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">E-mail</label><input class="fi" id="mu-email" type="email"></div>
+    <div class="fg"><label class="fl">Senha</label><input class="fi" id="mu-pass" type="password" placeholder="Deixe em branco para manter"></div>
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeModal('modalUser')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveUser()">Salvar usuário</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modalCompany">
+  <div class="modal" style="width:580px">
+    <button class="mc" onclick="closeModal('modalCompany')">✕</button>
+    <div class="modal-title" id="mcTitle">Nova Empresa</div>
+    <div class="g2">
+      <div class="fg"><label class="fl">Razão social</label><input class="fi" id="mc-name" type="text"></div>
+      <div class="fg"><label class="fl">CNPJ</label><input class="fi" id="mc-cnpj" type="text" placeholder="00.000.000/0000-00"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label class="fl">Setor / Segmento</label>
+        <select class="fs" id="mc-sector">
+          <option>Tecnologia</option><option>Indústria</option><option>Varejo</option>
+          <option>Saúde</option><option>Financeiro</option><option>Educação</option>
+          <option>Logística</option><option>Serviços</option><option>Governo</option><option>Outro</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Porte</label>
+        <select class="fs" id="mc-size">
+          <option>Microempresa (até 9)</option>
+          <option>Pequena (10-49)</option>
+          <option>Média (50-249)</option>
+          <option selected>Grande (250+)</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Responsável de contato</label><input class="fi" id="mc-contact" type="text"></div>
+    <div class="fg"><label class="fl">E-mail de contato</label><input class="fi" id="mc-email" type="email"></div>
+    <div class="fg"><label class="fl">Observações</label><textarea class="fta" id="mc-obs" placeholder="Informações relevantes sobre a empresa..."></textarea></div>
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeModal('modalCompany')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCompany()">Salvar empresa</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modalQuestion">
+  <div class="modal" style="width:640px">
+    <button class="mc" onclick="closeModal('modalQuestion')">✕</button>
+    <div class="modal-title" id="mqTitle">Nova Questão</div>
+    <div class="fg"><label class="fl">Texto da questão</label><textarea class="fta" id="mq-text" style="min-height:90px" placeholder="Descreva a questão de forma clara e objetiva..."></textarea></div>
+    <div class="fg"><label class="fl">Orientação / Dica</label><textarea class="fta" id="mq-hint" style="min-height:60px" placeholder="Contexto adicional para o avaliador..."></textarea></div>
+    <div class="g2">
+      <div class="fg"><label class="fl">Domínio de TI</label>
+        <select class="fs" id="mq-domain">
+          <option>Infraestrutura e Operações</option>
+          <option>Segurança da Informação</option>
+          <option>Governança de TI</option>
+          <option>Gestão de Serviços (ITSM)</option>
+          <option>Desenvolvimento e Sistemas</option>
+          <option>Gestão de Dados</option>
+          <option>Continuidade e Riscos</option>
+          <option>Alinhamento Estratégico</option>
+          <option>Cultura e Pessoas</option>
+          <option>Inovação e Tecnologia</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Indicador de maturidade</label>
+        <select class="fs" id="mq-indicator">
+          <option>Maturidade dos processos</option>
+          <option>Uso de ferramentas</option>
+          <option>Nível de serviço</option>
+          <option>Alinhamento estratégico</option>
+          <option>Governança de TI</option>
+          <option>Gestão de riscos</option>
+          <option>Cultura de TI</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Peso (1–5)</label>
+      <select class="fs" id="mq-weight">
+        <option value="1">1 — Básico</option>
+        <option value="2">2 — Relevante</option>
+        <option value="3" selected>3 — Importante</option>
+        <option value="4">4 — Crítico</option>
+        <option value="5">5 — Estratégico</option>
+      </select>
+    </div>
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeModal('modalQuestion')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveQuestion()">Salvar questão</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// ── STATE ──
+let DB = {
+  users: [
+    {id:1,name:'Admin ITMature',email:'admin@itmature.com',pass:'123456',role:'admin',created:'2025-01-10'},
+    {id:2,name:'Ana Consultora',email:'ana@itmature.com',pass:'123456',role:'consultor',created:'2025-01-15'},
+    {id:3,name:'Carlos Avaliador',email:'carlos@itmature.com',pass:'123456',role:'avaliador',created:'2025-02-01'}
+  ],
+  companies: [
+    {id:1,name:'TechCorp Soluções LTDA',cnpj:'12.345.678/0001-90',sector:'Tecnologia',size:'Grande (250+)',contact:'Marcos Lima',email:'marcos@techcorp.com',obs:'Empresa de software B2B',assessments:[]},
+    {id:2,name:'Indústria MetalForte S.A.',cnpj:'98.765.432/0001-11',sector:'Indústria',size:'Grande (250+)',contact:'Fernanda Costa',email:'fcosta@metalforte.com',obs:'Planta industrial com 3 unidades',assessments:[]}
+  ],
+  questions: [],
+  assessments: [],
+  currentUser: null,
+  editId: null
+};
+
+const ROLES = {admin:'Administrador',consultor:'Consultor',avaliador:'Avaliador',viewer:'Visualizador'};
+const ROLE_COLORS = {admin:'#5B8DEF',consultor:'#9575CD',avaliador:'#3DD68C',viewer:'#8B92B8'};
+
+const DEFAULT_QUESTIONS = [
+  // Governança de TI
+  {id:1,text:'A organização possui um Comitê de TI ou estrutura de governança formalmente estabelecida?',hint:'Verifique se há atas de reunião, regimento interno ou comitê executivo com participação de TI.',domain:'Governança de TI',indicator:'Governança de TI',weight:5},
+  {id:2,text:'Existe um Plano Estratégico de TI (PETI) alinhado ao planejamento estratégico corporativo?',hint:'O PETI deve estar documentado, aprovado pela diretoria e revisado periodicamente.',domain:'Alinhamento Estratégico',indicator:'Alinhamento estratégico',weight:5},
+  {id:3,text:'Os investimentos em TI são baseados em análises de ROI e alinhamento estratégico?',hint:'Verifique se há processo formal de aprovação de projetos e portfólio de TI.',domain:'Governança de TI',indicator:'Governança de TI',weight:4},
+  {id:4,text:'Existe catálogo de serviços de TI documentado e acessível aos usuários?',hint:'O catálogo deve listar todos os serviços, SLAs e ponto de contato.',domain:'Gestão de Serviços (ITSM)',indicator:'Nível de serviço',weight:4},
+  // Infraestrutura
+  {id:5,text:'A infraestrutura de TI (servidores, rede, storage) é monitorada 24/7 com alertas automáticos?',hint:'Verifique ferramentas como Zabbix, Nagios, Datadog, PRTG ou similares em uso.',domain:'Infraestrutura e Operações',indicator:'Uso de ferramentas',weight:4},
+  {id:6,text:'Existem procedimentos formais de backup e recuperação de dados testados regularmente?',hint:'Verificar política de backup, frequência, testes de restore e registro de evidências.',domain:'Continuidade e Riscos',indicator:'Gestão de riscos',weight:5},
+  {id:7,text:'A organização possui plano de continuidade de negócios (BCP/DRP) documentado e testado?',hint:'O plano deve cobrir cenários de falha crítica, RTO e RPO definidos.',domain:'Continuidade e Riscos',indicator:'Gestão de riscos',weight:5},
+  {id:8,text:'Os ativos de TI são inventariados e gerenciados com ferramenta de CMDB/ITSM?',hint:'Verificar se existe base de dados de configuração atualizada e processo de gestão.',domain:'Infraestrutura e Operações',indicator:'Maturidade dos processos',weight:3},
+  // Segurança
+  {id:9,text:'Existe política de segurança da informação formalmente aprovada e comunicada a todos?',hint:'A política deve estar publicada, assinada pela diretoria e com ciência de todos os colaboradores.',domain:'Segurança da Informação',indicator:'Governança de TI',weight:5},
+  {id:10,text:'A organização realiza avaliações periódicas de vulnerabilidade e testes de penetração?',hint:'Verificar relatórios de pentest, scan de vulnerabilidades (Nessus, OpenVAS) com periodicidade definida.',domain:'Segurança da Informação',indicator:'Gestão de riscos',weight:4},
+  {id:11,text:'Existem controles de acesso baseados em perfis (RBAC) e revisão periódica de acessos?',hint:'Verificar processo de provisioning, deprovisioning e revisão semestral de acessos.',domain:'Segurança da Informação',indicator:'Maturidade dos processos',weight:4},
+  {id:12,text:'Os colaboradores recebem treinamento em segurança da informação e conscientização (phishing)?',hint:'Verificar programa de awareness, frequência de treinamentos e métricas de efetividade.',domain:'Segurança da Informação',indicator:'Cultura de TI',weight:3},
+  // ITSM / Processos
+  {id:13,text:'Existe central de serviços (Service Desk) com registro e acompanhamento de chamados?',hint:'Verificar ferramenta ITSM (ServiceNow, GLPI, Jira Service Desk) com SLAs configurados.',domain:'Gestão de Serviços (ITSM)',indicator:'Nível de serviço',weight:4},
+  {id:14,text:'O processo de gestão de mudanças (Change Management) é formalizado com aprovações e CAB?',hint:'Verificar calendário de mudanças, processo de aprovação e registro de rollback.',domain:'Gestão de Serviços (ITSM)',indicator:'Maturidade dos processos',weight:4},
+  {id:15,text:'Os SLAs de TI são monitorados, reportados periodicamente e há metas definidas?',hint:'Verificar dashboards de SLA, relatórios mensais para stakeholders e metas documentadas.',domain:'Gestão de Serviços (ITSM)',indicator:'Nível de serviço',weight:4},
+  // Dados e Sistemas
+  {id:16,text:'Existe política de gestão de dados com critérios de qualidade, retenção e descarte?',hint:'Verificar política de dados, classificação da informação e processo de descarte seguro.',domain:'Gestão de Dados',indicator:'Maturidade dos processos',weight:3},
+  {id:17,text:'Os sistemas críticos possuem documentação técnica atualizada (arquitetura, integrações, APIs)?',hint:'Verificar repositório de documentação, diagramas de arquitetura e registros de integração.',domain:'Desenvolvimento e Sistemas',indicator:'Uso de ferramentas',weight:3},
+  {id:18,text:'Existe processo formal de gestão do ciclo de vida de aplicações (ALM) com versionamento?',hint:'Verificar uso de Git/SVN, pipeline CI/CD, ambientes separados (dev/hom/prod).',domain:'Desenvolvimento e Sistemas',indicator:'Maturidade dos processos',weight:3},
+  // Cultura e Pessoas
+  {id:19,text:'A equipe de TI possui plano de capacitação e desenvolvimento de competências?',hint:'Verificar plano de treinamento anual, orçamento para certificações e trilhas de desenvolvimento.',domain:'Cultura e Pessoas',indicator:'Cultura de TI',weight:3},
+  {id:20,text:'A TI é percebida pela organização como parceira estratégica e não apenas suporte operacional?',hint:'Avaliar participação de TI em decisões estratégicas, projetos de transformação digital e NPS interno.',domain:'Alinhamento Estratégico',indicator:'Cultura de TI',weight:4},
+  // LGPD e Conformidade
+  {id:21,text:'A organização possui programa de conformidade com a LGPD (Lei Geral de Proteção de Dados) implementado?',hint:'Verificar: mapeamento de dados pessoais (Data Mapping), nomeação do DPO, registro de tratamentos (ROPA), política de privacidade publicada e processos de atendimento a titulares. A LGPD (Lei 13.709/2018) exige controles técnicos e organizacionais formalizados.',domain:'Segurança da Informação',indicator:'Gestão de riscos',weight:5},
+  {id:22,text:'Existem processos definidos para resposta a incidentes de segurança envolvendo dados pessoais, incluindo notificação à ANPD?',hint:'A LGPD exige notificação à Autoridade Nacional de Proteção de Dados (ANPD) em caso de incidente com dados pessoais. Verificar: plano de resposta a incidentes, prazo de notificação definido (72h recomendado) e log de ocorrências.',domain:'Segurança da Informação',indicator:'Gestão de riscos',weight:5},
+  {id:23,text:'Os contratos com fornecedores e parceiros incluem cláusulas de proteção de dados e compliance com a LGPD (operadores de dados)?',hint:'A LGPD exige que controladores garantam que operadores de dados (fornecedores de cloud, SaaS, parceiros) também estejam em conformidade. Verificar aditivos contratuais e DPAs (Data Processing Agreements).',domain:'Gestão de Dados',indicator:'Governança de TI',weight:4}
+];
+
+// ── INIT ──
+function init() {
+  DB.questions = DEFAULT_QUESTIONS.map(q=>({...q}));
+  updateBadges();
+  updateDashboard();
+}
+
+// ── AUTH ──
+function switchAuth(tab) {
+  document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
+  document.getElementById('regForm').style.display = tab==='reg'?'block':'none';
+  document.querySelectorAll('.tab-r').forEach((t,i)=>t.classList.toggle('on', (tab==='login')===!i));
+}
+
+function doLogin() {
+  const e = document.getElementById('lEmail').value.trim();
+  const p = document.getElementById('lPass').value;
+  const u = DB.users.find(u=>u.email===e && u.pass===p);
+  if (!u) return toast('E-mail ou senha inválidos','e');
+  DB.currentUser = u;
+  document.getElementById('LS').style.display='none';
+  document.getElementById('APP').style.display='flex';
+  document.getElementById('sideAv').textContent = u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sideName').textContent = u.name.split(' ')[0];
+  document.getElementById('sideRole').textContent = ROLES[u.role]||u.role;
+  document.getElementById('sideAv').style.background = ROLE_COLORS[u.role]||'var(--blue2)';
+  renderAll();
+  toast('Bem-vindo, '+u.name.split(' ')[0]+'! 👋','s');
+}
+
+function doRegister() {
+  const name = document.getElementById('rName').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const pass = document.getElementById('rPass').value;
+  const role = document.getElementById('rRole').value;
+  if (!name||!email||!pass) return toast('Preencha todos os campos','e');
+  if (DB.users.find(u=>u.email===email)) return toast('E-mail já cadastrado','e');
+  const u = {id:Date.now(),name,email,pass,role,created:new Date().toISOString().split('T')[0]};
+  DB.users.push(u);
+  toast('Conta criada com sucesso!','s');
+  switchAuth('login');
+  document.getElementById('lEmail').value=email;
+}
+
+function doLogout() {
+  DB.currentUser=null;
+  document.getElementById('LS').style.display='flex';
+  document.getElementById('APP').style.display='none';
+}
+
+// ── NAVIGATION ──
+function goPage(pg) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('p-'+pg).classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>{ if(n.getAttribute('onclick')===`goPage('${pg}')`) n.classList.add('on'); });
+
+  const titles = {dash:'Dashboard',users:'Usuários',companies:'Empresas',questions:'Banco de Questões',apply:'Aplicar Avaliação',reports:'Relatórios de Maturidade'};
+  document.getElementById('pageTitle').textContent = titles[pg]||pg;
+
+  const acts = {
+    users: `<button class="btn btn-primary" onclick="openModal('modalUser',null)">+ Novo Usuário</button>`,
+    companies: `<button class="btn btn-primary" onclick="openModal('modalCompany',null)">+ Nova Empresa</button>`,
+    questions: `<button class="btn btn-primary" onclick="openModal('modalQuestion',null)">+ Nova Questão</button>`,
+    apply: '',
+    reports: '',
+    dash: ''
+  };
+  document.getElementById('topActions').innerHTML = acts[pg]||'';
+
+  if (pg==='questions') renderQuestions();
+  if (pg==='companies') renderCompanies();
+  if (pg==='users') renderUsers();
+  if (pg==='apply') resetApply();
+  if (pg==='reports') renderReports();
+  if (pg==='dash') updateDashboard();
+}
+
+// ── RENDER FUNCTIONS ──
+function renderAll() { updateBadges(); updateDashboard(); renderUsers(); renderCompanies(); renderQuestions(); renderReports(); }
+function updateBadges() {
+  document.getElementById('qBadge').textContent = DB.questions.length;
+  document.getElementById('rBadge').textContent = DB.assessments.length;
+}
+
+function renderUsers() {
+  const tb = document.getElementById('usersTbody');
+  tb.innerHTML = DB.users.map(u=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:28px;height:28px;font-size:10px;background:${ROLE_COLORS[u.role]||'#5B8DEF'}">${u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>${u.name}</div></td>
+    <td>${u.email}</td>
+    <td><span class="tag" style="background:${ROLE_COLORS[u.role]}22;color:${ROLE_COLORS[u.role]}">${ROLES[u.role]||u.role}</span></td>
+    <td>${u.created}</td>
+    <td><div style="display:flex;gap:6px">
+      <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openModal('modalUser',${u.id})">Editar</button>
+      ${u.id!==DB.currentUser?.id?`<button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="delUser(${u.id})">Remover</button>`:''}
+    </div></td>
+  </tr>`).join('');
+}
+
+function renderCompanies() {
+  const tb = document.getElementById('compTbody');
+  tb.innerHTML = DB.companies.map(c=>`<tr>
+    <td>${c.name}</td>
+    <td style="font-family:monospace;font-size:11px">${c.cnpj}</td>
+    <td><span class="tag tag-blue">${c.sector}</span></td>
+    <td style="font-size:12px">${c.size}</td>
+    <td><span class="tag tag-green">${DB.assessments.filter(a=>a.companyId===c.id).length}</span></td>
+    <td><div style="display:flex;gap:6px">
+      <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openModal('modalCompany',${c.id})">Editar</button>
+      <button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="delCompany(${c.id})">Remover</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function renderQuestions() {
+  const fd = document.getElementById('qFilterDomain').value;
+  const fi = document.getElementById('qFilterInd').value;
+  // populate domain filter
+  const domains = [...new Set(DB.questions.map(q=>q.domain))];
+  const df = document.getElementById('qFilterDomain');
+  const cur = df.value;
+  df.innerHTML = '<option value="">Todos os domínios</option>' + domains.map(d=>`<option${cur===d?' selected':''}>${d}</option>`).join('');
+
+  let qs = DB.questions;
+  if (fd) qs = qs.filter(q=>q.domain===fd);
+  if (fi) qs = qs.filter(q=>q.indicator===fi);
+
+  const tb = document.getElementById('qTbody');
+  if (!qs.length) { tb.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--t3)">Nenhuma questão encontrada</td></tr>`; return; }
+  tb.innerHTML = qs.map((q,i)=>`<tr>
+    <td style="color:var(--t3);font-size:11px;width:40px">${i+1}</td>
+    <td style="max-width:320px"><div style="font-size:13px;line-height:1.4">${q.text}</div>${q.hint?`<div style="font-size:11px;color:var(--t3);margin-top:3px">${q.hint}</div>`:''}</td>
+    <td><span class="tag tag-blue" style="font-size:10px">${q.domain}</span></td>
+    <td style="font-size:11.5px;color:var(--t2)">${q.indicator}</td>
+    <td><span class="tag tag-purple">${q.weight}</span></td>
+    <td><div style="display:flex;gap:6px">
+      <button class="btn btn-ghost" style="padding:3px 8px;font-size:11px" onclick="openModal('modalQuestion',${q.id})">✏️</button>
+      <button class="btn btn-danger" style="padding:3px 8px;font-size:11px" onclick="delQuestion(${q.id})">🗑</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+// ── MODAL ──
+function openModal(id, editId) {
+  DB.editId = editId;
+  document.getElementById(id).classList.add('open');
+  if (id==='modalUser') {
+    document.getElementById('muTitle').textContent = editId ? 'Editar Usuário' : 'Novo Usuário';
+    if (editId) { const u=DB.users.find(u=>u.id===editId); document.getElementById('mu-name').value=u.name; document.getElementById('mu-email').value=u.email; document.getElementById('mu-role').value=u.role; document.getElementById('mu-pass').value=''; }
+    else { ['mu-name','mu-email','mu-pass'].forEach(i=>document.getElementById(i).value=''); document.getElementById('mu-role').value='avaliador'; }
+  }
+  if (id==='modalCompany') {
+    document.getElementById('mcTitle').textContent = editId ? 'Editar Empresa' : 'Nova Empresa';
+    if (editId) { const c=DB.companies.find(c=>c.id===editId); document.getElementById('mc-name').value=c.name; document.getElementById('mc-cnpj').value=c.cnpj; document.getElementById('mc-sector').value=c.sector; document.getElementById('mc-size').value=c.size; document.getElementById('mc-contact').value=c.contact; document.getElementById('mc-email').value=c.email; document.getElementById('mc-obs').value=c.obs||''; }
+    else { ['mc-name','mc-cnpj','mc-contact','mc-email','mc-obs'].forEach(i=>document.getElementById(i).value=''); }
+  }
+  if (id==='modalQuestion') {
+    document.getElementById('mqTitle').textContent = editId ? 'Editar Questão' : 'Nova Questão';
+    if (editId) { const q=DB.questions.find(q=>q.id===editId); document.getElementById('mq-text').value=q.text; document.getElementById('mq-hint').value=q.hint||''; document.getElementById('mq-domain').value=q.domain; document.getElementById('mq-indicator').value=q.indicator; document.getElementById('mq-weight').value=q.weight; }
+    else { document.getElementById('mq-text').value=''; document.getElementById('mq-hint').value=''; document.getElementById('mq-weight').value='3'; }
+  }
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); DB.editId=null; }
+
+function saveUser() {
+  const name=document.getElementById('mu-name').value.trim();
+  const email=document.getElementById('mu-email').value.trim();
+  const pass=document.getElementById('mu-pass').value;
+  const role=document.getElementById('mu-role').value;
+  if (!name||!email) return toast('Preencha nome e e-mail','e');
+  if (DB.editId) {
+    const u=DB.users.find(u=>u.id===DB.editId);
+    u.name=name; u.email=email; u.role=role;
+    if (pass) u.pass=pass;
+    toast('Usuário atualizado','s');
+  } else {
+    if (DB.users.find(u=>u.email===email)) return toast('E-mail já cadastrado','e');
+    DB.users.push({id:Date.now(),name,email,pass:pass||'123456',role,created:new Date().toISOString().split('T')[0]});
+    toast('Usuário criado','s');
+  }
+  closeModal('modalUser'); renderUsers();
+}
+
+function delUser(id) {
+  if (!confirm('Remover este usuário?')) return;
+  DB.users=DB.users.filter(u=>u.id!==id); renderUsers(); toast('Usuário removido','i');
+}
+
+function saveCompany() {
+  const name=document.getElementById('mc-name').value.trim();
+  const cnpj=document.getElementById('mc-cnpj').value.trim();
+  if (!name) return toast('Informe a razão social','e');
+  const data = {name,cnpj,sector:document.getElementById('mc-sector').value,size:document.getElementById('mc-size').value,contact:document.getElementById('mc-contact').value.trim(),email:document.getElementById('mc-email').value.trim(),obs:document.getElementById('mc-obs').value.trim()};
+  if (DB.editId) { Object.assign(DB.companies.find(c=>c.id===DB.editId),data); toast('Empresa atualizada','s'); }
+  else { DB.companies.push({id:Date.now(),assessments:[],...data}); toast('Empresa cadastrada','s'); }
+  closeModal('modalCompany'); renderCompanies();
+}
+
+function delCompany(id) {
+  if (!confirm('Remover esta empresa?')) return;
+  DB.companies=DB.companies.filter(c=>c.id!==id); renderCompanies(); toast('Empresa removida','i');
+}
+
+function saveQuestion() {
+  const text=document.getElementById('mq-text').value.trim();
+  if (!text) return toast('Informe o texto da questão','e');
+  const data = {text,hint:document.getElementById('mq-hint').value.trim(),domain:document.getElementById('mq-domain').value,indicator:document.getElementById('mq-indicator').value,weight:parseInt(document.getElementById('mq-weight').value)};
+  if (DB.editId) { Object.assign(DB.questions.find(q=>q.id===DB.editId),data); toast('Questão atualizada','s'); }
+  else { DB.questions.push({id:Date.now(),...data}); toast('Questão adicionada','s'); }
+  closeModal('modalQuestion'); renderQuestions(); updateBadges();
+}
+
+function delQuestion(id) {
+  if (!confirm('Remover esta questão?')) return;
+  DB.questions=DB.questions.filter(q=>q.id!==id); renderQuestions(); updateBadges(); toast('Questão removida','i');
+}
+
+// ── ASSESSMENT ──
+let currentAssessment = {companyId:null,evalId:null,obs:'',answers:{},qIndex:0,questions:[]};
+
+function resetApply() {
+  // populate selects
+  const sc = document.getElementById('selCompany');
+  sc.innerHTML = '<option value="">Selecione a empresa...</option>' + DB.companies.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  const se = document.getElementById('selEval');
+  se.innerHTML = '<option value="">Selecione o avaliador...</option>' + DB.users.filter(u=>['admin','consultor','avaliador'].includes(u.role)).map(u=>`<option value="${u.id}">${u.name} (${ROLES[u.role]})</option>`).join('');
+  document.getElementById('applySetup').style.display='block';
+  document.getElementById('applyAssessment').style.display='none';
+  document.getElementById('applyDone').style.display='none';
+  document.getElementById('applyObs').value='';
+}
+
+function startAssessment() {
+  const cid = parseInt(document.getElementById('selCompany').value);
+  const eid = parseInt(document.getElementById('selEval').value);
+  if (!cid) return toast('Selecione a empresa','e');
+  if (!eid) return toast('Selecione o avaliador','e');
+  if (!DB.questions.length) return toast('Cadastre questões primeiro','e');
+  currentAssessment = {companyId:cid,evalId:eid,obs:document.getElementById('applyObs').value,answers:{},qIndex:0,questions:[...DB.questions]};
+  document.getElementById('applySetup').style.display='none';
+  document.getElementById('applyAssessment').style.display='block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = currentAssessment.questions[currentAssessment.qIndex];
+  const total = currentAssessment.questions.length;
+  const done = currentAssessment.qIndex;
+  const pct = Math.round((done/total)*100);
+  const ans = currentAssessment.answers[q.id]||{};
+
+  const domColors = {
+    'Governança de TI':'tag-purple','Alinhamento Estratégico':'tag-teal',
+    'Infraestrutura e Operações':'tag-blue','Segurança da Informação':'tag-red',
+    'Gestão de Serviços (ITSM)':'tag-green','Gestão de Dados':'tag-amber',
+    'Desenvolvimento e Sistemas':'tag-blue','Continuidade e Riscos':'tag-amber',
+    'Cultura e Pessoas':'tag-green','Inovação e Tecnologia':'tag-purple'
+  };
+
+  const options = [
+    {val:'yes',label:'Sim — totalmente implementado',score:100},
+    {val:'partial',label:'Parcialmente implementado',score:50},
+    {val:'planned',label:'Em planejamento / iniciando',score:25},
+    {val:'no',label:'Não implementado',score:0}
+  ];
+
+  const evBlock = ans.val ? (ans.val==='no'||ans.val==='planned' ? `
+    <div class="ev-req action">
+      <div class="ev-label ac">⚡ Providência / Plano de Ação (obrigatório)</div>
+      <textarea class="fta" style="min-height:60px" placeholder="Descreva a ação corretiva, ferramenta a adotar, prazo ou responsável..." onchange="setEvidence(${q.id},'action',this.value)">${ans.action||''}</textarea>
+    </div>` : `
+    <div class="ev-req">
+      <div class="ev-label ev">✅ Evidência comprobatória (obrigatório)</div>
+      <textarea class="fta" style="min-height:60px" placeholder="Documento, ferramenta, processo, relatório que comprova a implementação..." onchange="setEvidence(${q.id},'evidence',this.value)">${ans.evidence||''}</textarea>
+    </div>`) : '';
+
+  document.getElementById('applyAssessment').innerHTML = `
+    <div class="prog-wrap">
+      <div class="prog-info">
+        <span>Questão ${done+1} de ${total}</span>
+        <span>${pct}% concluído</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="q-num">Q${done+1}</span>
+        <span class="tag ${domColors[q.domain]||'tag-blue'} q-domain" style="font-size:10px">${q.domain}</span>
+        <span class="q-indicator">${q.indicator}</span>
+        <span class="tag tag-purple" style="font-size:10px">Peso ${q.weight}</span>
+      </div>
+      <div class="q-text">${q.text}</div>
+      ${q.hint?`<div class="q-hint">💡 ${q.hint}</div>`:''}
+      <div class="opts">
+        ${options.map(o=>`
+          <button class="opt${ans.val===o.val?' sel':''}" onclick="selectOpt(${q.id},'${o.val}')">
+            <div class="opt-dot"></div>
+            <span>${o.label}</span>
+            <span class="opt-score">${o.score}pts</span>
+          </button>`).join('')}
+      </div>
+      ${evBlock}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+      <button class="btn btn-ghost" onclick="prevQ()" ${done===0?'disabled':''}>← Anterior</button>
+      <div style="display:flex;gap:8px">
+        ${done < total-1
+          ? `<button class="btn btn-primary" onclick="nextQ()">Próxima →</button>`
+          : `<button class="btn btn-success btn-lg" onclick="finishAssessment()">✅ Concluir Avaliação</button>`}
+      </div>
+    </div>`;
+}
+
+function selectOpt(qid, val) {
+  if (!currentAssessment.answers[qid]) currentAssessment.answers[qid]={};
+  currentAssessment.answers[qid].val = val;
+  currentAssessment.answers[qid].evidence='';
+  currentAssessment.answers[qid].action='';
+  renderQuestion();
+}
+
+function setEvidence(qid, field, val) {
+  if (!currentAssessment.answers[qid]) currentAssessment.answers[qid]={};
+  currentAssessment.answers[qid][field]=val;
+}
+
+function nextQ() {
+  const q = currentAssessment.questions[currentAssessment.qIndex];
+  const ans = currentAssessment.answers[q.id];
+  if (!ans||!ans.val) return toast('Selecione uma resposta','e');
+  currentAssessment.qIndex++;
+  renderQuestion();
+}
+function prevQ() { if(currentAssessment.qIndex>0){currentAssessment.qIndex--;renderQuestion();} }
+
+function finishAssessment() {
+  const q = currentAssessment.questions[currentAssessment.qIndex];
+  const ans = currentAssessment.answers[q.id];
+  if (!ans||!ans.val) return toast('Selecione uma resposta para a última questão','e');
+
+  // compute scores
+  const scoreMap = {yes:100,partial:50,planned:25,no:0};
+  let totalW=0,totalS=0;
+  const byDomain={};
+  currentAssessment.questions.forEach(q=>{
+    const a = currentAssessment.answers[q.id];
+    const s = a ? (scoreMap[a.val]||0)*q.weight : 0;
+    const w = q.weight;
+    totalW+=w; totalS+=s;
+    if(!byDomain[q.domain]) byDomain[q.domain]={score:0,weight:0,qs:[]};
+    byDomain[q.domain].score+=s;
+    byDomain[q.domain].weight+=w;
+    byDomain[q.domain].qs.push({...q,answer:a});
+  });
+  const overall = Math.round(totalS/totalW);
+
+  let level,levelLabel,levelColor,levelDesc;
+  if (overall>=90){level='estrategico';levelLabel='Estratégico';levelColor='var(--green)';levelDesc='A TI é vista como parceira estratégica do negócio. Processos altamente automatizados, infraestrutura resiliente e cultura de inovação consolidada.';}
+  else if (overall>=70){level='eficaz';levelLabel='Eficaz (Otimizado)';levelColor='var(--blue)';levelDesc='Processos de TI otimizados e alinhados à estratégia. Automação presente, governança forte e cultura de melhoria contínua estabelecida.';}
+  else if (overall>=40){level='eficiente';levelLabel='Eficiente (Proativo)';levelColor='var(--amber)';levelDesc='Organização em transição: processos básicos de ITIL implementados, maior foco em prevenção, padronização em evolução.';}
+  else {level='artesanal';levelLabel='Artesanal (Reativo)';levelColor='var(--red)';levelDesc='TI predominantemente reativa, apagando incêndios. Processos manuais, alta dependência de indivíduos, baixo nível de automação.';}
+
+  const assessment = {
+    id:Date.now(),
+    companyId:currentAssessment.companyId,
+    evalId:currentAssessment.evalId,
+    obs:currentAssessment.obs,
+    answers:currentAssessment.answers,
+    questions:[...currentAssessment.questions],
+    overall,byDomain,level,levelLabel,levelColor,levelDesc,
+    date:new Date().toLocaleDateString('pt-BR'),
+    aiAnalysis:null,aiLoading:true
+  };
+  DB.assessments.push(assessment);
+  updateBadges(); updateDashboard();
+
+  document.getElementById('applyAssessment').style.display='none';
+  document.getElementById('applyDone').style.display='block';
+
+  // trigger AI analysis async
+  generateAIAnalysis(assessment);
+  toast('Avaliação salva! Gerando análise IA...','i');
+}
+
+// ── AI ANALYSIS ──
+async function generateAIAnalysis(assessment) {
+  const comp = DB.companies.find(c=>c.id===assessment.companyId);
+  const scoreMap = {yes:100,partial:50,planned:25,no:0};
+
+  const domainsSum = Object.entries(assessment.byDomain).map(([d,v])=>
+    `- ${d}: ${Math.round(v.score/v.weight)}%`).join('\n');
+
+  const weaknesses = assessment.questions
+    .filter(q=>{ const a=assessment.answers[q.id]; return a && (a.val==='no'||a.val==='planned'); })
+    .slice(0,5).map(q=>`- ${q.text} (${q.domain})`).join('\n');
+
+  const strengths = assessment.questions
+    .filter(q=>{ const a=assessment.answers[q.id]; return a && a.val==='yes'; })
+    .slice(0,3).map(q=>`- ${q.text}`).join('\n');
+
+  const prompt = `Você é um especialista sênior em Governança de TI e Maturidade Organizacional. Analise o resultado do diagnóstico abaixo e gere um relatório executivo profissional em português brasileiro.
+
+EMPRESA: ${comp?.name||'N/A'} | Setor: ${comp?.sector||'N/A'} | Porte: ${comp?.size||'N/A'}
+SCORE GERAL: ${assessment.overall}%
+NÍVEL DE MATURIDADE: ${assessment.levelLabel}
+
+SCORES POR DOMÍNIO:
+${domainsSum}
+
+PONTOS FORTES (respondidos como Sim):
+${strengths||'Nenhum identificado'}
+
+PRINCIPAIS GAPS (Não ou Em planejamento):
+${weaknesses||'Nenhum identificado'}
+
+OBSERVAÇÕES DO AVALIADOR: ${assessment.obs||'Sem observações adicionais'}
+
+Gere uma análise executiva com:
+1. **Diagnóstico executivo** (2-3 parágrafos): interpretação do nível de maturidade, o que significa para o negócio, riscos implícitos.
+2. **Prioridades de ação** (3-5 itens numerados): ações concretas e prioritárias com justificativa.
+3. **Recomendação estratégica** (1 parágrafo): visão de roadmap e próximo patamar de maturidade.
+
+Use linguagem executiva, direta e orientada a negócio. Seja específico, não genérico.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    assessment.aiAnalysis = data.content?.[0]?.text || null;
+  } catch(e) {
+    assessment.aiAnalysis = null;
+  }
+  assessment.aiLoading = false;
+  toast('Análise de IA concluída! ✨','s');
+}
+
+// ── REPORTS ──
+function renderReports() {
+  const el = document.getElementById('reportList');
+  document.getElementById('reportDetail').style.display='none';
+  document.getElementById('reportList').style.display='block';
+
+  if (!DB.assessments.length) {
+    el.innerHTML=`<div class="empty"><div class="ico">📋</div><h3 style="font-size:15px;margin-bottom:6px">Nenhuma avaliação realizada</h3><p>Vá em "Aplicar Avaliação" para iniciar o diagnóstico de maturidade de uma empresa.</p></div>`;
+    return;
+  }
+
+  el.innerHTML = DB.assessments.slice().reverse().map(a=>{
+    const comp = DB.companies.find(c=>c.id===a.companyId);
+    const eval_ = DB.users.find(u=>u.id===a.evalId);
+    const lc = {artesanal:'var(--red)',eficiente:'var(--amber)',eficaz:'var(--blue)',estrategico:'var(--green)'};
+    return `<div class="card" style="cursor:pointer;border-left:4px solid ${lc[a.level]}" onclick="showReport(${a.id})">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700">${comp?.name||'Empresa removida'}</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:3px">📅 ${a.date} &nbsp;·&nbsp; 👤 ${eval_?.name||'—'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="text-align:right">
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:${lc[a.level]};line-height:1">${a.overall}%</div>
+            <div style="font-size:11px;color:var(--t3)">Score geral</div>
+          </div>
+          <div style="padding:8px 14px;border-radius:var(--r-sm);background:${lc[a.level]}20;border:1px solid ${lc[a.level]}40">
+            <div style="font-size:12px;font-weight:600;color:${lc[a.level]}">${a.levelLabel}</div>
+          </div>
+          <button class="btn btn-ghost" style="font-size:11px">Ver relatório →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showReport(id) {
+  const a = DB.assessments.find(a=>a.id===id);
+  const comp = DB.companies.find(c=>c.id===a.companyId);
+  const eval_ = DB.users.find(u=>u.id===a.evalId);
+  const lc = {artesanal:'var(--red)',eficiente:'var(--amber)',eficaz:'var(--blue)',estrategico:'var(--green)'};
+  const scoreMap={yes:100,partial:50,planned:25,no:0};
+
+  document.getElementById('reportList').style.display='none';
+  const rd = document.getElementById('reportDetail');
+  rd.style.display='block';
+
+  // domain bars
+  const domBars = Object.entries(a.byDomain).map(([d,v])=>{
+    const pct = Math.round(v.score/v.weight);
+    let bc = pct>=90?'var(--green)':pct>=70?'var(--blue)':pct>=40?'var(--amber)':'var(--red)';
+    return `<div class="domain-row">
+      <div class="top"><span class="name">${d}</span><span class="pct-lbl" style="color:${bc}">${pct}%</span></div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${bc}"></div></div>
+    </div>`;
+  }).join('');
+
+  // evidence table
+  const evRows = a.questions.map(q=>{
+    const ans = a.answers[q.id];
+    if (!ans) return '';
+    const vmap={yes:'✅ Sim',partial:'🟡 Parcial',planned:'📋 Planejado',no:'❌ Não'};
+    const vc={yes:'var(--green)',partial:'var(--amber)',planned:'var(--blue)',no:'var(--red)'};
+    const evText = ans.val==='yes'||ans.val==='partial' ? ans.evidence : ans.action;
+    return `<tr>
+      <td style="max-width:240px;line-height:1.4;font-size:11.5px">${q.text}</td>
+      <td><span class="tag tag-blue" style="font-size:9.5px">${q.domain}</span></td>
+      <td style="font-size:11.5px;color:${vc[ans.val]};font-weight:600">${vmap[ans.val]}</td>
+      <td style="font-size:11px;color:var(--t2);max-width:200px;line-height:1.4">${evText||'<em style="color:var(--t3)">Não informado</em>'}</td>
+      <td style="text-align:center"><span class="tag tag-purple" style="font-size:9.5px">${q.weight}</span></td>
+    </tr>`;
+  }).join('');
+
+  const aiBlock = a.aiLoading
+    ? `<div class="full-spin"><div class="spin"></div>Gerando análise com IA...</div>`
+    : a.aiAnalysis
+    ? `<div class="ai-block">
+        <div class="ai-header"><span class="ai-badge">✦ Análise IA</span><span style="font-size:12px;color:var(--t3)">Gerada por Claude Sonnet</span></div>
+        <div class="ai-text">${formatAI(a.aiAnalysis)}</div>
+       </div>`
+    : `<div class="card-sm" style="color:var(--t3);font-size:13px">Análise de IA não disponível (verifique conexão com a API).</div>`;
+
+  rd.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
+      <button class="btn btn-ghost" onclick="renderReports()">← Voltar</button>
+      <span style="font-size:13px;color:var(--t3)">${comp?.name} · ${a.date}</span>
+      <button class="btn btn-ghost" style="margin-left:auto" onclick="printReport(${id})">🖨 Imprimir</button>
+    </div>
+
+    <div class="level-badge ${a.level}">
+      <div style="float:right;font-family:'Syne',sans-serif;font-size:60px;font-weight:800;opacity:.2;line-height:1;margin-left:10px">${a.overall}%</div>
+      <div style="font-size:10px;color:${lc[a.level]};font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Nível de Maturidade de TI</div>
+      <h2 style="color:${lc[a.level]}">${a.levelLabel}</h2>
+      <p>${a.levelDesc}</p>
+      <div style="display:flex;gap:16px;margin-top:14px;flex-wrap:wrap">
+        <span style="font-size:12px;color:var(--t2)">🏢 ${comp?.name}</span>
+        <span style="font-size:12px;color:var(--t2)">📅 ${a.date}</span>
+        <span style="font-size:12px;color:var(--t2)">👤 ${eval_?.name||'—'}</span>
+        <span style="font-size:12px;color:var(--t2)">❓ ${a.questions.length} questões</span>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="sec-title">📊 Score por Domínio</div>
+        ${domBars}
+      </div>
+      <div>
+        <div class="g2" style="margin-bottom:14px">
+          ${[{l:'Score Geral',v:a.overall+'%',c:'blue'},{l:'Questões respondidas',v:a.questions.length,c:'green'},{l:'Implementados (Sim)',v:a.questions.filter(q=>a.answers[q.id]?.val==='yes').length,c:'purple'},{l:'Gaps identificados',v:a.questions.filter(q=>a.answers[q.id]?.val==='no'||a.answers[q.id]?.val==='planned').length,c:'amber'}].map(m=>`<div class="met ${m.c}"><div class="v">${m.v}</div><div class="l">${m.l}</div></div>`).join('')}
+        </div>
+        <div class="card">
+          <div class="sec-title">🎯 Indicadores de Maturidade</div>
+          ${(() => {
+            const inds={};
+            a.questions.forEach(q=>{ const ans=a.answers[q.id]; if(!inds[q.indicator]) inds[q.indicator]={s:0,w:0}; inds[q.indicator].s+=(scoreMap[ans?.val]||0)*q.weight; inds[q.indicator].w+=q.weight; });
+            return Object.entries(inds).map(([ind,v])=>{
+              const p=Math.round(v.s/v.w);
+              let bc=p>=90?'var(--green)':p>=70?'var(--blue)':p>=40?'var(--amber)':'var(--red)';
+              return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px"><span style="color:var(--t2)">${ind}</span><span style="font-weight:700;color:${bc}">${p}%</span></div>`;
+            }).join('');
+          })()}
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-bottom:14px">✦ Análise Executiva (IA)</div>
+    ${aiBlock}
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="sec-title">🗺️ Roadmap de Evolução — Do Reativo ao Estratégico</div>
+      <p style="font-size:12px;color:var(--t3);margin-bottom:20px">Baseado em COBIT 2019, ITIL v4 e ISO 38500 · Metodologia Prof. Haroldo Peon</p>
+      <div style="position:relative;padding-bottom:8px">
+        <div style="position:absolute;top:28px;left:40px;right:40px;height:3px;background:var(--s3);border-radius:2px;z-index:0"></div>
+        <div style="position:absolute;top:28px;left:40px;height:3px;background:linear-gradient(90deg,var(--red),var(--amber),var(--blue),var(--green));border-radius:2px;z-index:1;width:${Math.min(a.overall,100)}%"></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative;z-index:2">
+          ${[
+            {num:'01',title:'Diagnóstico Inicial',desc:'Mapeamento de maturidade, identificação de gaps e estado atual da TI.',color:'var(--red)',icon:'🔍',active:a.overall>=0},
+            {num:'02',title:'Alinhamento Estratégico',desc:'Definição de OKRs, integração com o negócio, BSC e Matriz RACI.',color:'var(--amber)',icon:'🎯',active:a.overall>=40},
+            {num:'03',title:'Implementação de Processos',desc:'Adoção de frameworks COBIT, ITIL v4, ISO 38500 e LGPD Compliance.',color:'var(--blue)',icon:'⚙️',active:a.overall>=70},
+            {num:'04',title:'Escalabilidade com IA',desc:'Otimização contínua, automação inteligente e monitoramento preditivo.',color:'var(--green)',icon:'🚀',active:a.overall>=90}
+          ].map(s=>`
+            <div style="background:${s.active?s.color+'14':'var(--s2)'};border:1px solid ${s.active?s.color+'50':'var(--border)'};border-radius:var(--r);padding:16px;transition:.3s;${s.active?'':'opacity:.45'}">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <div style="width:32px;height:32px;border-radius:50%;background:${s.active?s.color+'25':'var(--s3)'};border:2px solid ${s.active?s.color:'var(--border2)'};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${s.active?s.icon:'○'}</div>
+                <span style="font-size:9px;font-weight:700;color:${s.active?s.color:'var(--t3)'};letter-spacing:.8px;text-transform:uppercase">Etapa ${s.num}</span>
+              </div>
+              <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:${s.active?'var(--text)':'var(--t3)'};margin-bottom:6px;line-height:1.3">${s.title}</div>
+              <div style="font-size:11.5px;color:${s.active?'var(--t2)':'var(--t3)'};line-height:1.55">${s.desc}</div>
+              ${s.active?`<div style="margin-top:10px;font-size:10px;font-weight:600;color:${s.color}">✓ Nível atingido</div>`:`<div style="margin-top:10px;font-size:10px;color:var(--t3)">Score necessário: ${s.num==='02'?'40%':s.num==='03'?'70%':'90%'}+</div>`}
+            </div>`).join('')}
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:12px 16px;background:var(--s2);border-radius:var(--r-sm);display:flex;align-items:center;gap:10px">
+        <div style="font-size:20px">💡</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.5">
+          <strong style="color:var(--text)">Próximo patamar:</strong>
+          ${a.overall<40?'Foco imediato em documentar processos, implantar Service Desk e estabelecer rotinas básicas de backup e segurança. O objetivo é sair do modo reativo.':
+            a.overall<70?'Avançar na padronização via ITIL, implementar LGPD Compliance, estruturar governança com Comitê de TI e alinhar PETI ao planejamento corporativo.':
+            a.overall<90?'Consolidar automação, fortalecer cultura de melhoria contínua, integrar OKRs de TI ao BSC corporativo e preparar uso estratégico de IA.':
+            'Parabéns! TI em nível Estratégico. Mantenha o ciclo de melhoria contínua, expanda uso de IA preditiva e posicione a TI como motor de inovação do negócio.'}
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="sec-title">📋 Detalhamento: Evidências e Providências</div>
+      <p style="font-size:12px;color:var(--t3);margin-bottom:14px">Para cada resposta <strong style="color:var(--green)">Sim</strong> — evidência comprobatória. Para cada <strong style="color:var(--red)">Não/Planejado</strong> — plano de ação definido.</p>
+      <div style="overflow-x:auto">
+        <table class="ev-table">
+          <thead><tr><th>Questão</th><th>Domínio</th><th>Resposta</th><th>Evidência / Providência</th><th>Peso</th></tr></thead>
+          <tbody>${evRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(91,141,239,.04);border-color:rgba(91,141,239,.2)">
+      <div style="font-size:12px;color:var(--t3);line-height:1.7;text-align:center">
+        <strong style="color:var(--text)">"Não dá pra gerenciar o que não consegue medir."</strong><br>
+        Este relatório é o ponto de partida. Use as evidências e providências levantadas para construir seu plano de evolução de maturidade de TI.
+      </div>
+    </div>`;
+
+  // if AI still loading, poll
+  if (a.aiLoading) {
+    const poll = setInterval(()=>{
+      if (!a.aiLoading) { clearInterval(poll); showReport(id); }
+    }, 2000);
+  }
+}
+
+function formatAI(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^(\d+\.\s)/gm,'<br><strong>$1</strong>')
+    .replace(/\n\n/g,'<br><br>')
+    .replace(/\n/g,'<br>');
+}
+
+function printReport(id) { window.print(); }
+
+// ── DASHBOARD ──
+let chartInst = null;
+function updateDashboard() {
+  document.getElementById('d-avs').textContent = DB.assessments.length;
+  const compIds = [...new Set(DB.assessments.map(a=>a.companyId))];
+  document.getElementById('d-comp').textContent = compIds.length;
+  const avg = DB.assessments.length ? Math.round(DB.assessments.reduce((s,a)=>s+a.overall,0)/DB.assessments.length) : '—';
+  document.getElementById('d-avg').textContent = avg+(typeof avg==='number'?'%':'');
+  document.getElementById('d-qs').textContent = DB.questions.length;
+
+  // level chart
+  const lc = {artesanal:0,eficiente:0,eficaz:0,estrategico:0};
+  DB.assessments.forEach(a=>lc[a.level]=(lc[a.level]||0)+1);
+  const ctx = document.getElementById('levelChart');
+  if (ctx) {
+    if (chartInst) chartInst.destroy();
+    chartInst = new Chart(ctx,{
+      type:'doughnut',
+      data:{
+        labels:['Artesanal','Eficiente','Eficaz','Estratégico'],
+        datasets:[{data:[lc.artesanal,lc.eficiente,lc.eficaz,lc.estrategico],backgroundColor:['rgba(239,83,80,.7)','rgba(240,165,0,.7)','rgba(91,141,239,.7)','rgba(61,214,140,.7)'],borderWidth:0,hoverOffset:4}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#8B92B8',font:{size:12},boxWidth:12,padding:10}}}}
+    });
+  }
+
+  // recent
+  const rl = document.getElementById('recentList');
+  if (!DB.assessments.length) { rl.innerHTML=`<div class="empty"><div class="ico">📊</div><p>Nenhuma avaliação realizada</p></div>`; return; }
+  const lc2 = {artesanal:'var(--red)',eficiente:'var(--amber)',eficaz:'var(--blue)',estrategico:'var(--green)'};
+  rl.innerHTML = DB.assessments.slice().reverse().slice(0,4).map(a=>{
+    const comp=DB.companies.find(c=>c.id===a.companyId);
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="goPage('reports')">
+      <div><div style="font-size:13px;font-weight:500">${comp?.name||'—'}</div><div style="font-size:11px;color:var(--t3)">${a.date}</div></div>
+      <div style="text-align:right"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:${lc2[a.level]}">${a.overall}%</div><div style="font-size:10px;color:var(--t3)">${a.levelLabel}</div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── TOAST ──
+function toast(msg, type='i') {
+  const w=document.getElementById('toasts');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.textContent=msg;
+  w.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+
+// ── BOOT ──
+init();
+</script>
+</body>
+</html>
