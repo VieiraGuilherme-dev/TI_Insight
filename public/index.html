@@ -17,6 +17,8 @@
   --red:#EF5350;--red2:rgba(239,83,80,0.15);
   --purple:#9575CD;--purple2:rgba(149,117,205,0.15);
   --teal:#26C6DA;--teal2:rgba(38,198,218,0.15);
+  --orange:#FF7043;--orange2:rgba(255,112,67,0.15);
+  --pink:#EC407A;--pink2:rgba(236,64,122,0.15);
   --r:10px;--r-sm:6px;--r-lg:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -198,6 +200,50 @@ h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 .divider{height:1px;background:var(--border);margin:18px 0}
 .sec-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--text)}
+
+/* ── CAPACITY LEVELS (COBIT) ── */
+.cap-level{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-sm);margin-bottom:6px;border:1px solid var(--border)}
+.cap-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.cap-bar{flex:1;height:6px;background:var(--s3);border-radius:10px;overflow:hidden}
+.cap-fill{height:100%;border-radius:10px;transition:width 1s ease}
+
+/* ── SLA TABLE ── */
+.sla-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.sla-row:last-child{border-bottom:none}
+.sla-status{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── HISTORY / EVOLUTION ── */
+.hist-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.hist-item:last-child{border-bottom:none}
+.hist-score{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;width:60px;text-align:right;flex-shrink:0}
+
+/* ── BENCHMARKING ── */
+.bench-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12.5px}
+.bench-company{width:140px;flex-shrink:0;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bench-bar-wrap{flex:1;height:8px;background:var(--s3);border-radius:10px;overflow:hidden}
+.bench-bar-fill{height:100%;border-radius:10px}
+.bench-pct{width:40px;text-align:right;font-weight:600;flex-shrink:0}
+
+/* ── DOMAIN DETAIL MODAL ── */
+.cobit-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:rgba(149,117,205,.15);color:var(--purple);margin-right:4px;margin-bottom:3px}
+
+/* ── KPI CARDS ── */
+.kpi-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:14px;position:relative;overflow:hidden}
+.kpi-card .kpi-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1}
+.kpi-card .kpi-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.kpi-card .kpi-trend{font-size:10.5px;margin-top:6px;font-weight:500}
+.kpi-card .kpi-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.2}
+
+/* ── DEVOPS/CICD CHECK ── */
+.check-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);background:var(--s2);border:1px solid var(--border);margin-bottom:6px;font-size:12.5px}
+.check-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── SECTOR FILTER ── */
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:500;cursor:pointer;border:1px solid var(--border2);color:var(--t2);background:none;transition:.15s;font-family:'Inter',sans-serif}
+.chip:hover{background:var(--s3);color:var(--text)}
+.chip.on{background:var(--accent3);color:var(--accent);border-color:rgba(91,141,239,.3)}
+
 </style>
 </head>
 <body>
@@ -271,6 +317,21 @@ h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif}
         <button class="ni" onclick="goPage('reports')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>Relatórios
           <span class="nbadge" id="rBadge" style="background:var(--green)">0</span>
+        </button>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">Governança</div>
+        <button class="ni" onclick="goPage('cobit')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>COBIT / Capacidade
+        </button>
+        <button class="ni" onclick="goPage('sla')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>SLA &amp; Incidentes
+        </button>
+        <button class="ni" onclick="goPage('evolution')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg>Evolução &amp; KPIs
+        </button>
+        <button class="ni" onclick="goPage('benchmark')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Benchmarking
         </button>
       </div>
     </nav>
@@ -416,6 +477,126 @@ h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif}
         <div id="reportDetail" style="display:none"></div>
       </div>
 
+      <!-- ── COBIT / CAPACIDADE ── -->
+      <div class="page" id="p-cobit">
+        <div class="g2" style="margin-bottom:18px">
+          <div class="card">
+            <div class="sec-title">🎯 Mapeamento COBIT 2019 — Objetivos de Governança</div>
+            <p style="font-size:12px;color:var(--t3);margin-bottom:16px;line-height:1.6">Cada domínio do TI_Insight mapeado aos objetivos COBIT 2019 (EDM, APO, BAI, DSS, MEA) com nível de capacidade atual.</p>
+            <div id="cobitDomainMap"></div>
+          </div>
+          <div class="card">
+            <div class="sec-title">📊 Níveis de Capacidade por Processo (0–5)</div>
+            <p style="font-size:12px;color:var(--t3);margin-bottom:16px;line-height:1.6">Modelo inspirado no CMMI — avaliação de maturidade por processo de governança.</p>
+            <div id="cobitCapacity"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-title">📈 Indicadores Estratégicos de TI</div>
+          <div class="g4" id="cobitKPIs"></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <div class="sec-title">🔍 Análise de Não Conformidades por Framework</div>
+          <div id="cobitGaps"></div>
+        </div>
+      </div>
+
+      <!-- ── SLA & INCIDENTES ── -->
+      <div class="page" id="p-sla">
+        <div class="g2" style="margin-bottom:18px">
+          <div class="card">
+            <div class="sec-title">⏱ SLAs Monitorados em Tempo Real</div>
+            <div id="slaTable"></div>
+          </div>
+          <div class="card">
+            <div class="sec-title">🚨 Gestão de Incidentes vs Problemas</div>
+            <div style="margin-bottom:16px">
+              <div class="g2" style="margin-bottom:12px">
+                <div class="kpi-card">
+                  <div class="kpi-val" style="color:var(--red)" id="kpi-incidents">0</div>
+                  <div class="kpi-lbl">Incidentes Abertos</div>
+                  <div class="kpi-trend" style="color:var(--t3)">Interrupções ativas de serviço</div>
+                  <div class="kpi-icon">🔥</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-val" style="color:var(--amber)" id="kpi-problems">0</div>
+                  <div class="kpi-lbl">Problemas em Análise</div>
+                  <div class="kpi-trend" style="color:var(--t3)">Causas raiz investigadas</div>
+                  <div class="kpi-icon">🔎</div>
+                </div>
+              </div>
+              <div id="incidentList"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-title">🔄 Práticas DevOps &amp; CI/CD — Avaliação</div>
+          <p style="font-size:12px;color:var(--t3);margin-bottom:14px">Verificação de adoção de práticas modernas de desenvolvimento e entrega contínua.</p>
+          <div class="g2" id="devopsChecks"><div></div><div></div></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <div class="sec-title">📋 Catálogo de Serviços de TI</div>
+          <div id="serviceCatalog"></div>
+        </div>
+      </div>
+
+      <!-- ── EVOLUÇÃO & KPIs ── -->
+      <div class="page" id="p-evolution">
+        <div class="g4" style="margin-bottom:18px" id="evolutionKPIs"></div>
+        <div class="g2" style="margin-bottom:18px">
+          <div class="card">
+            <div class="sec-title">📅 Histórico de Avaliações de Maturidade</div>
+            <div id="evolutionHistory"><div class="empty"><div class="ico">📊</div><p>Realize avaliações para acompanhar a evolução</p></div></div>
+          </div>
+          <div class="card">
+            <div class="sec-title">🎯 Evolução por Domínio</div>
+            <div id="domainEvolution"><div class="empty"><div class="ico">📈</div><p>Dados disponíveis após avaliações</p></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-title">🔒 Segurança da Informação — Controles ISO/IEC 27000</div>
+          <p style="font-size:12px;color:var(--t3);margin-bottom:14px">Avaliação de implementação dos controles de segurança conforme ISO/IEC 27001:2022.</p>
+          <div id="securityControls"></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <div class="sec-title">🔄 Ciclo PDCA — Melhoria Contínua</div>
+          <div class="g4" id="pdcaCycle"></div>
+        </div>
+      </div>
+
+      <!-- ── BENCHMARKING ── -->
+      <div class="page" id="p-benchmark">
+        <div style="margin-bottom:18px">
+          <div class="filter-chips" id="benchFilter">
+            <button class="chip on" onclick="setBenchFilter('all',this)">Todos os setores</button>
+            <button class="chip" onclick="setBenchFilter('Tecnologia',this)">Tecnologia</button>
+            <button class="chip" onclick="setBenchFilter('Indústria',this)">Indústria</button>
+            <button class="chip" onclick="setBenchFilter('Saúde',this)">Saúde</button>
+            <button class="chip" onclick="setBenchFilter('Financeiro',this)">Financeiro</button>
+            <button class="chip" onclick="setBenchFilter('Varejo',this)">Varejo</button>
+          </div>
+        </div>
+        <div class="g2" style="margin-bottom:18px">
+          <div class="card">
+            <div class="sec-title">🏆 Ranking de Maturidade por Empresa</div>
+            <div id="benchRanking"></div>
+          </div>
+          <div class="card">
+            <div class="sec-title">📊 Score Médio por Setor</div>
+            <canvas id="benchChart" height="200"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-title">🚀 Inovação em TI — Domínios Estratégicos</div>
+          <p style="font-size:12px;color:var(--t3);margin-bottom:16px">Avaliação de maturidade nos domínios de inovação: Cultura Digital, Data &amp; Analytics, Cloud &amp; IA.</p>
+          <div class="g3" id="innovationDomains"></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <div class="sec-title">📋 Dashboard Executivo — Visão Consolidada</div>
+          <div id="execDashboard"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -458,7 +639,8 @@ h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif}
         <select class="fs" id="mc-sector">
           <option>Tecnologia</option><option>Indústria</option><option>Varejo</option>
           <option>Saúde</option><option>Financeiro</option><option>Educação</option>
-          <option>Logística</option><option>Serviços</option><option>Governo</option><option>Outro</option>
+          <option>Logística</option><option>Serviços</option><option>Governo</option>
+          <option>Agronegócio</option><option>Energia</option><option>Telecomunicações</option><option>Outro</option>
         </select>
       </div>
       <div class="fg"><label class="fl">Porte</label>
@@ -499,6 +681,9 @@ h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif}
           <option>Alinhamento Estratégico</option>
           <option>Cultura e Pessoas</option>
           <option>Inovação e Tecnologia</option>
+          <option>Data &amp; Analytics</option>
+          <option>Cloud &amp; Infraestrutura</option>
+          <option>Cultura Digital</option>
         </select>
       </div>
       <div class="fg"><label class="fl">Indicador de maturidade</label>
@@ -510,6 +695,9 @@ h1,h2,h3,h4,.syne{font-family:'Syne',sans-serif}
           <option>Governança de TI</option>
           <option>Gestão de riscos</option>
           <option>Cultura de TI</option>
+          <option>Inovação</option>
+          <option>Analytics &amp; Dados</option>
+          <option>Segurança</option>
         </select>
       </div>
     </div>
@@ -589,7 +777,23 @@ const DEFAULT_QUESTIONS = [
   // LGPD e Conformidade
   {id:21,text:'A organização possui programa de conformidade com a LGPD (Lei Geral de Proteção de Dados) implementado?',hint:'Verificar: mapeamento de dados pessoais (Data Mapping), nomeação do DPO, registro de tratamentos (ROPA), política de privacidade publicada e processos de atendimento a titulares. A LGPD (Lei 13.709/2018) exige controles técnicos e organizacionais formalizados.',domain:'Segurança da Informação',indicator:'Gestão de riscos',weight:5},
   {id:22,text:'Existem processos definidos para resposta a incidentes de segurança envolvendo dados pessoais, incluindo notificação à ANPD?',hint:'A LGPD exige notificação à Autoridade Nacional de Proteção de Dados (ANPD) em caso de incidente com dados pessoais. Verificar: plano de resposta a incidentes, prazo de notificação definido (72h recomendado) e log de ocorrências.',domain:'Segurança da Informação',indicator:'Gestão de riscos',weight:5},
-  {id:23,text:'Os contratos com fornecedores e parceiros incluem cláusulas de proteção de dados e compliance com a LGPD (operadores de dados)?',hint:'A LGPD exige que controladores garantam que operadores de dados (fornecedores de cloud, SaaS, parceiros) também estejam em conformidade. Verificar aditivos contratuais e DPAs (Data Processing Agreements).',domain:'Gestão de Dados',indicator:'Governança de TI',weight:4}
+  {id:23,text:'Os contratos com fornecedores e parceiros incluem cláusulas de proteção de dados e compliance com a LGPD (operadores de dados)?',hint:'A LGPD exige que controladores garantam que operadores de dados (fornecedores de cloud, SaaS, parceiros) também estejam em conformidade. Verificar aditivos contratuais e DPAs (Data Processing Agreements).',domain:'Gestão de Dados',indicator:'Governança de TI',weight:4},
+  // Gestão de Incidentes vs Problemas (ITIL v4)
+  {id:24,text:'A organização diferencia formalmente incidentes (interrupções) de problemas (causas raiz) com processos distintos?',hint:'ITIL v4 separa Gestão de Incidentes (restaurar serviço rapidamente) de Gestão de Problemas (eliminar causas raiz). Verificar processos, ferramentas e responsáveis distintos.',domain:'Gestão de Serviços (ITSM)',indicator:'Maturidade dos processos',weight:4},
+  {id:25,text:'Existe processo de Gestão de Problemas com análise de causa raiz (RCA) documentada e ações preventivas?',hint:'Verificar uso de técnicas como Ishikawa, 5 Porquês, análise de tendências de incidentes recorrentes e knowledge base atualizada.',domain:'Gestão de Serviços (ITSM)',indicator:'Maturidade dos processos',weight:4},
+  // DevOps / CI-CD
+  {id:26,text:'A organização adota práticas de DevOps com pipelines de CI/CD automatizados para entrega de software?',hint:'Verificar ferramentas como Jenkins, GitLab CI, GitHub Actions, Azure DevOps. Frequência de deploys, taxa de sucesso e tempo médio de entrega (lead time).',domain:'Desenvolvimento e Sistemas',indicator:'Inovação',weight:4},
+  {id:27,text:'Existem ambientes separados (desenvolvimento, homologação, produção) com processo de promoção controlada?',hint:'Verificar isolamento de ambientes, processo de aprovação para produção, uso de feature flags e estratégia de rollback.',domain:'Desenvolvimento e Sistemas',indicator:'Maturidade dos processos',weight:3},
+  // Criptografia e Segurança Física (ISO 27000)
+  {id:28,text:'Os dados sensíveis são criptografados tanto em trânsito (TLS/SSL) quanto em repouso (AES-256 ou equivalente)?',hint:'Verificar certificados SSL/TLS atualizados, criptografia de banco de dados, storage e backups. Conformidade com ISO/IEC 27001 Controle 8.24.',domain:'Segurança da Informação',indicator:'Segurança',weight:5},
+  {id:29,text:'Existem controles de segurança física para os ativos de TI (data center, racks, servidores, estações de trabalho)?',hint:'Verificar controle de acesso físico (biometria, crachá), câmeras, registro de visitantes, proteção contra incêndio/alagamento. ISO 27001 Controles 7.1 a 7.6.',domain:'Segurança da Informação',indicator:'Segurança',weight:4},
+  {id:30,text:'A organização possui SGSI (Sistema de Gestão de Segurança da Informação) implementado com ciclo PDCA?',hint:'Verificar política de segurança, avaliação de riscos, declaração de aplicabilidade (SoA), auditorias internas e revisão pela direção conforme ISO 27001.',domain:'Segurança da Informação',indicator:'Governança de TI',weight:5},
+  // Data & Analytics
+  {id:31,text:'A organização utiliza ferramentas de Business Intelligence (BI) e analytics para tomada de decisão baseada em dados?',hint:'Verificar uso de Power BI, Tableau, Looker, Metabase ou similares. Dashboards operacionais e estratégicos em uso pela gestão.',domain:'Data & Analytics',indicator:'Analytics & Dados',weight:4},
+  {id:32,text:'Existe uma estratégia de dados (Data Strategy) com definição de data owners, governança e qualidade de dados?',hint:'Verificar data catalog, definição de responsáveis por domínios de dados, métricas de qualidade (completude, acurácia, consistência).',domain:'Data & Analytics',indicator:'Analytics & Dados',weight:4},
+  // Cultura Digital / Inovação
+  {id:33,text:'A organização possui iniciativas estruturadas de inovação em TI (laboratórios de inovação, POCs, parcerias com startups)?',hint:'Verificar budget dedicado a inovação, projetos de IA/ML, automação RPA, IoT ou outras tecnologias emergentes em piloto ou produção.',domain:'Cultura Digital',indicator:'Inovação',weight:3},
+  {id:34,text:'A força de trabalho recebe capacitação em transformação digital, cultura data-driven e novas tecnologias?',hint:'Verificar programas de reskilling/upskilling, trilhas de aprendizado digital, certificações em cloud, dados ou IA patrocinadas pela empresa.',domain:'Cultura Digital',indicator:'Cultura de TI',weight:3}
 ];
 
 // ── INIT ──
@@ -649,16 +853,14 @@ function goPage(pg) {
   document.getElementById('p-'+pg).classList.add('on');
   document.querySelectorAll('.ni').forEach(n=>{ if(n.getAttribute('onclick')===`goPage('${pg}')`) n.classList.add('on'); });
 
-  const titles = {dash:'Dashboard',users:'Usuários',companies:'Empresas',questions:'Banco de Questões',apply:'Aplicar Avaliação',reports:'Relatórios de Maturidade'};
+  const titles = {dash:'Dashboard',users:'Usuários',companies:'Empresas',questions:'Banco de Questões',apply:'Aplicar Avaliação',reports:'Relatórios de Maturidade',cobit:'COBIT 2019 — Capacidade e Governança',sla:'SLA & Gestão de Incidentes (ITIL v4)',evolution:'Evolução de Maturidade & KPIs',benchmark:'Benchmarking & Inovação'};
   document.getElementById('pageTitle').textContent = titles[pg]||pg;
 
   const acts = {
     users: `<button class="btn btn-primary" onclick="openModal('modalUser',null)">+ Novo Usuário</button>`,
     companies: `<button class="btn btn-primary" onclick="openModal('modalCompany',null)">+ Nova Empresa</button>`,
     questions: `<button class="btn btn-primary" onclick="openModal('modalQuestion',null)">+ Nova Questão</button>`,
-    apply: '',
-    reports: '',
-    dash: ''
+    apply: '', reports: '', dash: '', cobit: '', sla: '', evolution: '', benchmark: ''
   };
   document.getElementById('topActions').innerHTML = acts[pg]||'';
 
@@ -668,6 +870,10 @@ function goPage(pg) {
   if (pg==='apply') resetApply();
   if (pg==='reports') renderReports();
   if (pg==='dash') updateDashboard();
+  if (pg==='cobit') renderCobit();
+  if (pg==='sla') renderSLA();
+  if (pg==='evolution') renderEvolution();
+  if (pg==='benchmark') renderBenchmark();
 }
 
 // ── RENDER FUNCTIONS ──
@@ -992,16 +1198,18 @@ async function generateAIAnalysis(assessment) {
     .filter(q=>{ const a=assessment.answers[q.id]; return a && a.val==='yes'; })
     .slice(0,3).map(q=>`- ${q.text}`).join('\n');
 
-  const prompt = `Você é um especialista sênior em Governança de TI e Maturidade Organizacional. Analise o resultado do diagnóstico abaixo e gere um relatório executivo profissional em português brasileiro.
+  const prompt = `Você é um especialista sênior em Governança de TI, COBIT 2019, ITIL v4 e ISO/IEC 27001. Analise o diagnóstico abaixo e gere um relatório executivo personalizado em português brasileiro.
 
-EMPRESA: ${comp?.name||'N/A'} | Setor: ${comp?.sector||'N/A'} | Porte: ${comp?.size||'N/A'}
+EMPRESA: ${comp?.name||'N/A'}
+SETOR: ${comp?.sector||'N/A'}
+PORTE: ${comp?.size||'N/A'}
 SCORE GERAL: ${assessment.overall}%
 NÍVEL DE MATURIDADE: ${assessment.levelLabel}
 
 SCORES POR DOMÍNIO:
 ${domainsSum}
 
-PONTOS FORTES (respondidos como Sim):
+PONTOS FORTES (Sim):
 ${strengths||'Nenhum identificado'}
 
 PRINCIPAIS GAPS (Não ou Em planejamento):
@@ -1009,12 +1217,22 @@ ${weaknesses||'Nenhum identificado'}
 
 OBSERVAÇÕES DO AVALIADOR: ${assessment.obs||'Sem observações adicionais'}
 
-Gere uma análise executiva com:
-1. **Diagnóstico executivo** (2-3 parágrafos): interpretação do nível de maturidade, o que significa para o negócio, riscos implícitos.
-2. **Prioridades de ação** (3-5 itens numerados): ações concretas e prioritárias com justificativa.
-3. **Recomendação estratégica** (1 parágrafo): visão de roadmap e próximo patamar de maturidade.
+INSTRUÇÕES DE PERSONALIZAÇÃO:
+- Adapte as recomendações ao setor "${comp?.sector||'geral'}" com práticas e benchmarks específicos desse mercado
+- Considere o porte "${comp?.size||'N/A'}" nas prioridades (PMEs têm restrições de orçamento diferentes de grandes corporações)
+- Sugira frameworks específicos para o nível "${assessment.levelLabel}" (ex: se Artesanal, foque em fundamentos; se Estratégico, foque em inovação)
+- Mapeie os principais gaps aos objetivos COBIT 2019 (EDM, APO, BAI, DSS, MEA) mais relevantes
 
-Use linguagem executiva, direta e orientada a negócio. Seja específico, não genérico.`;
+Gere uma análise com:
+1. **Diagnóstico executivo** (2-3 parágrafos): interpretação contextualizada ao setor e porte, riscos de negócio implícitos, benchmarks do setor.
+2. **Mapeamento COBIT 2019** (2-3 itens): quais objetivos de governança estão mais críticos com base nos gaps.
+3. **Prioridades de ação** (4-5 itens numerados): ações concretas com justificativa, prazo estimado e quick wins vs iniciativas de médio prazo.
+4. **Trilha de evolução** (1 parágrafo): roadmap personalizado para o próximo nível de maturidade com marcos intermediários.
+5. **Indicadores de sucesso** (3-4 KPIs): métricas mensuráveis para acompanhar evolução.
+
+Use linguagem executiva, direta e orientada a negócio. Seja altamente específico ao contexto da empresa — evite recomendações genéricas.`;
+
+
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages',{
@@ -1263,6 +1481,397 @@ function toast(msg, type='i') {
 }
 
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+
+// ── COBIT PAGE ──
+const COBIT_MAP = {
+  'Governança de TI':        {obj:'EDM01, EDM02, EDM05', desc:'Assegurar a definição e manutenção do framework de governança'},
+  'Alinhamento Estratégico': {obj:'APO02, APO05, APO06', desc:'Gerenciar estratégia, portfólio e orçamento de TI'},
+  'Infraestrutura e Operações':{obj:'BAI09, DSS01, DSS03', desc:'Gerenciar ativos, operações e problemas'},
+  'Segurança da Informação': {obj:'APO13, DSS05, MEA03', desc:'Gerenciar segurança e conformidade regulatória'},
+  'Gestão de Serviços (ITSM)':{obj:'DSS02, DSS03, BAI06', desc:'Gerenciar requisições, incidentes e mudanças'},
+  'Gestão de Dados':         {obj:'APO14, BAI10, DSS06', desc:'Gerenciar dados, configuração e controles de processo'},
+  'Continuidade e Riscos':   {obj:'APO12, DSS04, EDM03', desc:'Gerenciar riscos e continuidade do negócio'},
+  'Desenvolvimento e Sistemas':{obj:'BAI02, BAI03, BAI07', desc:'Gerenciar requisitos, soluções e implantações'},
+  'Cultura e Pessoas':       {obj:'APO07, APO08, BAI08', desc:'Gerenciar RH, relacionamentos e conhecimento'},
+  'Data & Analytics':        {obj:'APO14, BAI10, EDM05', desc:'Gestão de dados e valor para o negócio'},
+  'Cultura Digital':         {obj:'APO02, APO08, APO13', desc:'Inovação, transformação digital e cultura'},
+};
+
+const CAPACITY_LEVELS = [
+  {l:0,name:'Incompleto',desc:'Processo não existe ou não alcança seu propósito',color:'var(--red)'},
+  {l:1,name:'Realizado',desc:'Processo alcança seu propósito de forma básica',color:'var(--orange)'},
+  {l:2,name:'Gerenciado',desc:'Processo é planejado, monitorado e ajustado',color:'var(--amber)'},
+  {l:3,name:'Estabelecido',desc:'Processo usa práticas definidas e padronizadas',color:'var(--blue)'},
+  {l:4,name:'Previsível',desc:'Processo opera com limites definidos e é previsível',color:'var(--teal)'},
+  {l:5,name:'Otimizado',desc:'Processo é melhorado continuamente para atingir objetivos',color:'var(--green)'},
+];
+
+function renderCobit() {
+  // Domain map
+  const domains = [...new Set(DB.questions.map(q=>q.domain))];
+  const avgByDomain = {};
+  domains.forEach(d=>{
+    const qs = DB.questions.filter(q=>q.domain===d);
+    if (DB.assessments.length) {
+      const scores = DB.assessments.map(a=>{
+        if (!a.byDomain[d]) return null;
+        return Math.round(a.byDomain[d].score/a.byDomain[d].weight);
+      }).filter(s=>s!==null);
+      avgByDomain[d] = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+    } else avgByDomain[d] = 0;
+  });
+
+  document.getElementById('cobitDomainMap').innerHTML = domains.map(d=>{
+    const cm = COBIT_MAP[d]||{obj:'APO, DSS',desc:'Objetivos de gestão e suporte'};
+    const pct = avgByDomain[d]||0;
+    const bc = pct>=90?'var(--green)':pct>=70?'var(--blue)':pct>=40?'var(--amber)':'var(--red)';
+    return `<div style="padding:12px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div>
+          <span style="font-size:13px;font-weight:500">${d}</span>
+          <div style="margin-top:3px">${cm.obj.split(',').map(o=>`<span class="cobit-tag">${o.trim()}</span>`).join('')}</div>
+        </div>
+        <span style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:${bc}">${pct?pct+'%':'—'}</span>
+      </div>
+      <div style="font-size:11px;color:var(--t3)">${cm.desc}</div>
+    </div>`;
+  }).join('');
+
+  // Capacity levels
+  document.getElementById('cobitCapacity').innerHTML = CAPACITY_LEVELS.map(cl=>{
+    const domCount = domains.length;
+    const inLevel = DB.assessments.length ? domains.filter(d=>{
+      const p = avgByDomain[d]||0;
+      if (cl.l===5) return p>=90;
+      if (cl.l===4) return p>=75&&p<90;
+      if (cl.l===3) return p>=60&&p<75;
+      if (cl.l===2) return p>=40&&p<60;
+      if (cl.l===1) return p>=20&&p<40;
+      return p<20;
+    }).length : 0;
+    const barW = domCount ? Math.round(inLevel/domCount*100) : 0;
+    return `<div class="cap-level">
+      <div class="cap-num" style="background:${cl.color}22;color:${cl.color}">${cl.l}</div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px">
+          <span style="font-weight:600">${cl.name}</span>
+          <span style="color:var(--t3)">${inLevel} domínio${inLevel!==1?'s':''}</span>
+        </div>
+        <div class="cap-bar"><div class="cap-fill" style="width:${barW}%;background:${cl.color}"></div></div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:3px">${cl.desc}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Strategic KPIs
+  const overall = DB.assessments.length ? Math.round(DB.assessments.reduce((s,a)=>s+a.overall,0)/DB.assessments.length) : 0;
+  const riskResidual = 100-overall;
+  const complianceLevel = DB.assessments.length ? Math.round(DB.assessments.filter(a=>a.overall>=70).length/DB.assessments.length*100) : 0;
+  document.getElementById('cobitKPIs').innerHTML = [
+    {v:overall+'%',l:'Score Médio de Maturidade',icon:'🎯',c:'blue',trend:'Média de todas as avaliações'},
+    {v:riskResidual+'%',l:'Risco Residual de TI',icon:'⚠️',c:'red',trend:'Exposição ao risco organizacional'},
+    {v:complianceLevel+'%',l:'Nível de Conformidade (≥70%)',icon:'✅',c:'green',trend:'Empresas dentro do nível Eficaz ou superior'},
+    {v:DB.questions.length,l:'Questões no Banco',icon:'❓',c:'purple',trend:'Cobertura dos frameworks'},
+  ].map(k=>`<div class="kpi-card">
+    <div class="kpi-val" style="color:var(--${k.c})">${k.v}</div>
+    <div class="kpi-lbl">${k.l}</div>
+    <div class="kpi-trend" style="color:var(--t3)">${k.trend}</div>
+    <div class="kpi-icon">${k.icon}</div>
+  </div>`).join('');
+
+  // Gaps table
+  const gapData = [
+    {fw:'COBIT 2019',nc:'Mapeamento direto entre questões e objetivos COBIT',status:DB.assessments.length?'Parcial':'Pendente',priority:'Alta'},
+    {fw:'ITIL v4',nc:'Diferenciação formal entre Incidentes e Problemas',status:'Parcial',priority:'Alta'},
+    {fw:'ISO/IEC 27001',nc:'SGSI completo com ciclo PDCA implementado',status:DB.questions.find(q=>q.id===30)?'Avaliado':'Pendente',priority:'Crítica'},
+    {fw:'LGPD',nc:'Programa de conformidade com designação de DPO',status:DB.questions.find(q=>q.id===21)?'Avaliado':'Pendente',priority:'Crítica'},
+    {fw:'DevOps',nc:'Pipelines CI/CD e práticas de entrega contínua',status:DB.questions.find(q=>q.id===26)?'Avaliado':'Parcial',priority:'Média'},
+    {fw:'Data Strategy',nc:'Governança de dados com data owners definidos',status:DB.questions.find(q=>q.id===32)?'Avaliado':'Pendente',priority:'Média'},
+  ];
+  const pc={Crítica:'var(--red)',Alta:'var(--amber)',Média:'var(--blue)'};
+  const sc={'Avaliado':'tag-green','Parcial':'tag-amber','Pendente':'tag-red'};
+  document.getElementById('cobitGaps').innerHTML = `<table class="tbl"><thead><tr><th>Framework</th><th>Não Conformidade Identificada</th><th>Status</th><th>Prioridade</th></tr></thead><tbody>${gapData.map(g=>`<tr><td><span class="tag tag-purple" style="font-size:10px">${g.fw}</span></td><td>${g.nc}</td><td><span class="tag ${sc[g.status]||'tag-blue'}" style="font-size:10px">${g.status}</span></td><td><span style="color:${pc[g.priority]||'var(--t2)'};font-weight:600;font-size:12px">${g.priority}</span></td></tr>`).join('')}</tbody></table>`;
+}
+
+// ── SLA PAGE ──
+const SLA_DATA = [
+  {name:'Disponibilidade de Sistemas Críticos',target:'99.9%',current:'99.7%',status:'warn'},
+  {name:'Tempo de Resolução de Incidentes P1',target:'< 2h',current:'1h 45min',status:'ok'},
+  {name:'Tempo de Resolução de Incidentes P2',target:'< 8h',current:'10h 20min',status:'fail'},
+  {name:'Tempo de Resposta Service Desk',target:'< 15min',current:'12min',status:'ok'},
+  {name:'Disponibilidade de Backup',target:'100%',current:'100%',status:'ok'},
+  {name:'Tempo de Deploy em Produção (CI/CD)',target:'< 30min',current:'45min',status:'fail'},
+];
+const INCIDENTS_DATA = [
+  {id:'INC-001',title:'Queda do servidor de aplicação',type:'incidente',priority:'P1',status:'Resolvido',time:'2h 10min',rca:false},
+  {id:'INC-002',title:'Lentidão no sistema ERP nas manhãs',type:'problema',priority:'P2',status:'Em análise RCA',time:'—',rca:true},
+  {id:'INC-003',title:'Falha no backup incremental noturno',type:'incidente',priority:'P2',status:'Resolvido',time:'4h 30min',rca:false},
+  {id:'PRB-001',title:'Alta utilização de CPU em picos',type:'problema',priority:'P3',status:'Investigando',time:'—',rca:true},
+];
+const DEVOPS_CHECKS = [
+  {name:'Pipeline de CI configurado',done:true,detail:'Jenkins/GitLab CI com build automatizado'},
+  {name:'Pipeline de CD (deploy automatizado)',done:false,detail:'Deploy ainda manual em produção'},
+  {name:'Testes automatizados (unitários + integração)',done:true,detail:'Cobertura > 70% nos módulos críticos'},
+  {name:'Code review obrigatório antes de merge',done:true,detail:'Pull Requests com aprovação de 2 revisores'},
+  {name:'Monitoramento de aplicação (APM)',done:false,detail:'Sem New Relic, Datadog ou equivalente'},
+  {name:'Feature flags para lançamentos graduais',done:false,detail:'Ausente — rollout é tudo ou nada'},
+  {name:'Análise de segurança no pipeline (SAST/DAST)',done:false,detail:'Não há varredura automática de vulnerabilidades'},
+  {name:'Métricas DORA acompanhadas',done:false,detail:'Lead time, deployment frequency, MTTR, CFR não medidos'},
+];
+const SERVICE_CATALOG = [
+  {name:'Service Desk (N1)',sla:'95% resolvidos em 8h',status:'Ativo',owner:'TI Operações'},
+  {name:'Suporte Sistemas ERP (N2)',sla:'80% resolvidos em 24h',status:'Ativo',owner:'Sistemas'},
+  {name:'Gestão de Acessos',sla:'Novo acesso em até 4h',status:'Ativo',owner:'Segurança'},
+  {name:'Backup e Restore',sla:'RPO 4h / RTO 8h',status:'Ativo',owner:'Infraestrutura'},
+  {name:'Deploy em Produção',sla:'Janela mensal - domingo 0h-4h',status:'Parcial',owner:'Desenvolvimento'},
+  {name:'Monitoramento de Infraestrutura',sla:'Disponibilidade 24/7',status:'Ativo',owner:'Infraestrutura'},
+];
+
+function renderSLA() {
+  const sc={ok:'var(--green)',warn:'var(--amber)',fail:'var(--red)'};
+  document.getElementById('slaTable').innerHTML = SLA_DATA.map(s=>`
+    <div class="sla-row">
+      <div class="sla-status" style="background:${sc[s.status]}"></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${s.name}</div><div style="font-size:11px;color:var(--t3)">Meta: ${s.target}</div></div>
+      <div style="text-align:right"><div style="font-size:13px;font-weight:600;color:${sc[s.status]}">${s.current}</div><div style="font-size:10px;color:var(--t3)">${s.status==='ok'?'✅ OK':s.status==='warn'?'⚠️ Atenção':'❌ Fora do SLA'}</div></div>
+    </div>`).join('');
+
+  const incidents = INCIDENTS_DATA.filter(i=>i.type==='incidente');
+  const problems = INCIDENTS_DATA.filter(i=>i.type==='problema');
+  document.getElementById('kpi-incidents').textContent = incidents.filter(i=>i.status!=='Resolvido').length;
+  document.getElementById('kpi-problems').textContent = problems.length;
+
+  const tc={P1:'var(--red)',P2:'var(--amber)',P3:'var(--blue)'};
+  document.getElementById('incidentList').innerHTML = INCIDENTS_DATA.map(i=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <span style="color:${tc[i.priority]};font-weight:700;width:30px">${i.priority}</span>
+      <span style="flex:1;font-weight:500">${i.title}</span>
+      <span class="tag ${i.type==='incidente'?'tag-red':'tag-amber'}" style="font-size:9.5px">${i.type}</span>
+      <span style="color:var(--t3);font-size:11px">${i.status}</span>
+      ${i.rca?'<span style="background:rgba(149,117,205,.15);color:var(--purple);font-size:9.5px;padding:1px 6px;border-radius:10px">RCA</span>':''}
+    </div>`).join('');
+
+  // DevOps checks
+  const half = Math.ceil(DEVOPS_CHECKS.length/2);
+  const col1 = DEVOPS_CHECKS.slice(0,half);
+  const col2 = DEVOPS_CHECKS.slice(half);
+  [col1,col2].forEach((col,ci)=>{
+    document.getElementById('devopsChecks').children[ci].innerHTML = col.map(c=>`
+      <div class="check-item">
+        <div class="check-dot" style="background:${c.done?'var(--green)':'var(--red)'}"></div>
+        <div style="flex:1"><div style="font-weight:500">${c.name}</div><div style="font-size:11px;color:var(--t3);margin-top:2px">${c.detail}</div></div>
+        <span style="font-size:18px">${c.done?'✅':'❌'}</span>
+      </div>`).join('');
+  });
+  // ensure devopsChecks has 2 divs
+  const dc = document.getElementById('devopsChecks');
+  if (!dc.children[0]) dc.appendChild(document.createElement('div'));
+  if (!dc.children[1]) dc.appendChild(document.createElement('div'));
+  dc.children[0].innerHTML = col1.map(c=>`<div class="check-item"><div class="check-dot" style="background:${c.done?'var(--green)':'var(--red)'}"></div><div style="flex:1"><div style="font-weight:500">${c.name}</div><div style="font-size:11px;color:var(--t3);margin-top:2px">${c.detail}</div></div><span style="font-size:18px">${c.done?'✅':'❌'}</span></div>`).join('');
+  dc.children[1].innerHTML = col2.map(c=>`<div class="check-item"><div class="check-dot" style="background:${c.done?'var(--green)':'var(--red)'}"></div><div style="flex:1"><div style="font-weight:500">${c.name}</div><div style="font-size:11px;color:var(--t3);margin-top:2px">${c.detail}</div></div><span style="font-size:18px">${c.done?'✅':'❌'}</span></div>`).join('');
+
+  // Service catalog
+  const sc2={Ativo:'tag-green',Parcial:'tag-amber',Inativo:'tag-red'};
+  document.getElementById('serviceCatalog').innerHTML = `<table class="tbl"><thead><tr><th>Serviço</th><th>SLA Comprometido</th><th>Status</th><th>Responsável</th></tr></thead><tbody>${SERVICE_CATALOG.map(s=>`<tr><td>${s.name}</td><td style="font-size:12px;color:var(--t2)">${s.sla}</td><td><span class="tag ${sc2[s.status]||'tag-blue'}" style="font-size:10px">${s.status}</span></td><td style="font-size:12px;color:var(--t2)">${s.owner}</td></tr>`).join('')}</tbody></table>`;
+}
+
+// ── EVOLUTION PAGE ──
+const SECURITY_CONTROLS = [
+  {ctrl:'5.1','name':'Políticas de Segurança da Informação',status:'Implementado'},
+  {ctrl:'6.1','name':'Triagem e Termos de Emprego',status:'Parcial'},
+  {ctrl:'7.1','name':'Segurança Física e Ambiental',status:'Pendente'},
+  {ctrl:'8.1','name':'Controle de Acesso e Identidade',status:'Implementado'},
+  {ctrl:'8.7','name':'Proteção contra Malware',status:'Implementado'},
+  {ctrl:'8.12','name':'Prevenção de Vazamento de Dados (DLP)',status:'Pendente'},
+  {ctrl:'8.24','name':'Criptografia (em trânsito e repouso)',status:'Parcial'},
+  {ctrl:'8.25','name':'Ciclo de Vida do Desenvolvimento Seguro',status:'Pendente'},
+  {ctrl:'5.23','name':'Segurança para Uso de Serviços de Nuvem',status:'Parcial'},
+  {ctrl:'5.34','name':'Privacidade e Proteção de Dados Pessoais (LGPD)',status:'Implementado'},
+];
+
+function renderEvolution() {
+  // KPIs dinâmicos
+  const totalAvs = DB.assessments.length;
+  const avgScore = totalAvs ? Math.round(DB.assessments.reduce((s,a)=>s+a.overall,0)/totalAvs) : 0;
+  const lastAv = DB.assessments.length ? DB.assessments[DB.assessments.length-1] : null;
+  const prevAv = DB.assessments.length>1 ? DB.assessments[DB.assessments.length-2] : null;
+  const trend = lastAv && prevAv ? lastAv.overall - prevAv.overall : 0;
+  const trendStr = trend>0?`+${trend}% vs anterior`:(trend<0?`${trend}% vs anterior`:'Primeira avaliação');
+  const trendColor = trend>0?'var(--green)':(trend<0?'var(--red)':'var(--t3)');
+
+  document.getElementById('evolutionKPIs').innerHTML = [
+    {v:totalAvs,l:'Total de Avaliações',icon:'📊',c:'blue',tr:'Histórico completo'},
+    {v:avgScore+(totalAvs?'%':''),l:'Score Médio Global',icon:'🎯',c:avgScore>=70?'green':avgScore>=40?'amber':'red',tr:trendStr,tc:trendColor},
+    {v:lastAv?lastAv.overall+'%':'—',l:'Última Avaliação',icon:'📅',c:'purple',tr:lastAv?lastAv.date:'Nenhuma avaliação'},
+    {v:DB.companies.length,l:'Empresas Cadastradas',icon:'🏢',c:'teal',tr:DB.assessments.length+' avaliações no total'},
+  ].map(k=>`<div class="kpi-card">
+    <div class="kpi-val" style="color:var(--${k.c})">${k.v}</div>
+    <div class="kpi-lbl">${k.l}</div>
+    <div class="kpi-trend" style="color:${k.tc||'var(--t3)'}">
+      ${k.tr}
+    </div>
+    <div class="kpi-icon">${k.icon}</div>
+  </div>`).join('');
+
+  // History
+  if (!DB.assessments.length) {
+    document.getElementById('evolutionHistory').innerHTML = `<div class="empty"><div class="ico">📊</div><p>Realize avaliações para acompanhar a evolução</p></div>`;
+  } else {
+    const lc2={artesanal:'var(--red)',eficiente:'var(--amber)',eficaz:'var(--blue)',estrategico:'var(--green)'};
+    document.getElementById('evolutionHistory').innerHTML = DB.assessments.slice().reverse().map(a=>{
+      const comp=DB.companies.find(c=>c.id===a.companyId);
+      return `<div class="hist-item">
+        <div class="hist-score" style="color:${lc2[a.level]}">${a.overall}%</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">${comp?.name||'—'}</div>
+          <div style="font-size:11px;color:var(--t3)">${a.date} · ${a.levelLabel}</div>
+          <div style="height:4px;background:var(--s3);border-radius:10px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${a.overall}%;background:${lc2[a.level]};border-radius:10px;transition:width 1s"></div></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Domain evolution (last assessment)
+  if (lastAv) {
+    document.getElementById('domainEvolution').innerHTML = Object.entries(lastAv.byDomain).map(([d,v])=>{
+      const pct=Math.round(v.score/v.weight);
+      const bc=pct>=90?'var(--green)':pct>=70?'var(--blue)':pct>=40?'var(--amber)':'var(--red)';
+      return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--t2)">${d}</span><span style="font-weight:700;color:${bc}">${pct}%</span></div><div style="height:5px;background:var(--s3);border-radius:10px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${bc};border-radius:10px;transition:width 1.2s"></div></div></div>`;
+    }).join('');
+  } else {
+    document.getElementById('domainEvolution').innerHTML = `<div class="empty"><div class="ico">📈</div><p>Dados disponíveis após avaliações</p></div>`;
+  }
+
+  // Security controls
+  const sc={Implementado:'tag-green',Parcial:'tag-amber',Pendente:'tag-red'};
+  document.getElementById('securityControls').innerHTML = `<table class="tbl"><thead><tr><th>Controle</th><th>Descrição ISO 27001:2022</th><th>Status</th></tr></thead><tbody>${SECURITY_CONTROLS.map(c=>`<tr><td style="font-family:monospace;font-size:11px;color:var(--purple)">${c.ctrl}</td><td>${c.name}</td><td><span class="tag ${sc[c.status]||'tag-blue'}" style="font-size:10px">${c.status}</span></td></tr>`).join('')}</tbody></table>`;
+
+  // PDCA
+  const pdca=[
+    {phase:'P',name:'Plan — Planejar',icon:'📋',color:'var(--blue)',items:['Definir objetivos de segurança e maturidade','Mapear riscos e vulnerabilidades','Estabelecer metas de SLA e KPIs']},
+    {phase:'D',name:'Do — Executar',icon:'⚙️',color:'var(--green)',items:['Implementar controles ISO 27001','Treinar equipes e promover cultura','Executar projetos de melhoria priorizados']},
+    {phase:'C',name:'Check — Verificar',icon:'🔍',color:'var(--amber)',items:['Monitorar KPIs e dashboards','Realizar auditorias internas periódicas','Acompanhar evolução das avaliações TI_Insight']},
+    {phase:'A',name:'Act — Agir',icon:'🚀',color:'var(--purple)',items:['Corrigir desvios identificados','Atualizar políticas e processos','Revisar objetivos para o próximo ciclo']},
+  ];
+  document.getElementById('pdcaCycle').innerHTML = pdca.map(p=>`<div style="padding:16px;background:${p.color}0d;border:1px solid ${p.color}33;border-radius:var(--r);border-top:3px solid ${p.color}">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="font-size:20px">${p.icon}</span>
+      <div><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:${p.color}">${p.phase}</div><div style="font-size:11px;color:var(--t2);font-weight:500">${p.name.split(' — ')[1]}</div></div>
+    </div>
+    <ul style="list-style:none;padding:0">${p.items.map(i=>`<li style="font-size:11.5px;color:var(--t2);padding:4px 0;border-bottom:1px solid var(--border);line-height:1.4">→ ${i}</li>`).join('')}</ul>
+  </div>`).join('');
+}
+
+// ── BENCHMARK PAGE ──
+let benchSectorFilter = 'all';
+let benchChartInst = null;
+
+const INNOVATION_DOMAINS = [
+  {name:'Cultura Digital',icon:'💻',desc:'Adoção de mentalidade digital, trabalho remoto, colaboração em nuvem',score:62,items:['Ferramentas de colaboração (Teams/Slack)','Processos digitalizados (sem papel)','Cultura de experimentação e falha rápida','Autoatendimento digital para colaboradores']},
+  {name:'Data & Analytics',icon:'📊',desc:'Maturidade no uso de dados para tomada de decisão',score:38,items:['Data Warehouse / Data Lake estruturado','Dashboards operacionais em uso real','Modelos preditivos ou IA em produção','Data governance e qualidade de dados']},
+  {name:'Cloud & IA',icon:'☁️',desc:'Uso de infraestrutura em nuvem e inteligência artificial',score:45,items:['Workloads críticos em cloud pública/híbrida','Adoção de serviços gerenciados (PaaS/SaaS)','Automação com IA/ML (RPA, NLP, visão)','FinOps e otimização de custos cloud']},
+];
+
+function setBenchFilter(sector, btn) {
+  benchSectorFilter = sector;
+  document.querySelectorAll('#benchFilter .chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  renderBenchmark();
+}
+
+function renderBenchmark() {
+  // Ranking
+  let avs = DB.assessments.slice();
+  if (benchSectorFilter!=='all') {
+    avs = avs.filter(a=>{
+      const comp=DB.companies.find(c=>c.id===a.companyId);
+      return comp?.sector===benchSectorFilter;
+    });
+  }
+  avs.sort((a,b)=>b.overall-a.overall);
+
+  const lc={artesanal:'var(--red)',eficiente:'var(--amber)',eficaz:'var(--blue)',estrategico:'var(--green)'};
+  if (!avs.length) {
+    document.getElementById('benchRanking').innerHTML=`<div class="empty"><div class="ico">🏆</div><p>Nenhuma avaliação${benchSectorFilter!=='all'?' para este setor':''}</p></div>`;
+  } else {
+    document.getElementById('benchRanking').innerHTML = avs.map((a,i)=>{
+      const comp=DB.companies.find(c=>c.id===a.companyId);
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+      return `<div class="bench-row">
+        <div style="width:24px;text-align:center;font-size:14px">${medal||`<span style="color:var(--t3);font-size:11px">${i+1}</span>`}</div>
+        <span class="bench-company">${comp?.name||'—'}</span>
+        <div class="bench-bar-wrap"><div class="bench-bar-fill" style="width:${a.overall}%;background:${lc[a.level]}"></div></div>
+        <span class="bench-pct" style="color:${lc[a.level]}">${a.overall}%</span>
+        <span class="tag" style="background:${lc[a.level]}22;color:${lc[a.level]};font-size:9.5px">${a.levelLabel}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Sector chart
+  const sectors = [...new Set(DB.companies.map(c=>c.sector))];
+  const sectorAvgs = sectors.map(s=>{
+    const compIds=DB.companies.filter(c=>c.sector===s).map(c=>c.id);
+    const sAvs=DB.assessments.filter(a=>compIds.includes(a.companyId));
+    return {sector:s,avg:sAvs.length?Math.round(sAvs.reduce((t,a)=>t+a.overall,0)/sAvs.length):0,count:sAvs.length};
+  }).filter(s=>s.count>0);
+
+  const ctx=document.getElementById('benchChart');
+  if (ctx) {
+    if (benchChartInst) benchChartInst.destroy();
+    if (sectorAvgs.length) {
+      benchChartInst=new Chart(ctx,{
+        type:'bar',
+        data:{
+          labels:sectorAvgs.map(s=>s.sector),
+          datasets:[{label:'Score médio (%)',data:sectorAvgs.map(s=>s.avg),backgroundColor:sectorAvgs.map(s=>s.avg>=70?'rgba(61,214,140,.7)':s.avg>=40?'rgba(240,165,0,.7)':'rgba(239,83,80,.7)'),borderColor:sectorAvgs.map(s=>s.avg>=70?'#3DD68C':s.avg>=40?'#F0A500':'#EF5350'),borderWidth:2,borderRadius:6,borderSkipped:false}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7FA8D4',font:{size:10}},grid:{color:'rgba(99,179,237,0.06)'}},y:{ticks:{color:'#7FA8D4',font:{size:10},max:100},grid:{color:'rgba(99,179,237,0.06)'},beginAtZero:true,max:100}}}
+      });
+    } else {
+      const c2d=ctx.getContext('2d');
+      c2d.fillStyle='rgba(139,146,184,.3)';
+      c2d.font='13px Inter';
+      c2d.textAlign='center';
+      c2d.fillText('Realize avaliações para ver dados por setor',ctx.width/2,ctx.height/2);
+    }
+  }
+
+  // Innovation domains
+  document.getElementById('innovationDomains').innerHTML = INNOVATION_DOMAINS.map(d=>{
+    const bc=d.score>=70?'var(--green)':d.score>=40?'var(--amber)':'var(--red)';
+    return `<div class="card-sm">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:22px">${d.icon}</span>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700">${d.name}</div>
+          <div style="font-size:10.5px;color:var(--t3);line-height:1.4">${d.desc}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="flex:1;height:6px;background:var(--s3);border-radius:10px;overflow:hidden"><div style="height:100%;width:${d.score}%;background:${bc};border-radius:10px;transition:width 1.2s"></div></div>
+        <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:${bc}">${d.score}%</span>
+      </div>
+      <ul style="list-style:none;padding:0">${d.items.map(i=>`<li style="font-size:11px;color:var(--t3);padding:3px 0;border-bottom:1px solid var(--border)">→ ${i}</li>`).join('')}</ul>
+    </div>`;
+  }).join('');
+
+  // Executive dashboard
+  const totalAvs2 = DB.assessments.length;
+  const avgAll = totalAvs2 ? Math.round(DB.assessments.reduce((s,a)=>s+a.overall,0)/totalAvs2) : 0;
+  const stratCount = DB.assessments.filter(a=>a.level==='estrategico').length;
+  const riskCount = DB.assessments.filter(a=>a.level==='artesanal').length;
+  document.getElementById('execDashboard').innerHTML = `
+    <div class="g4">
+      <div class="kpi-card"><div class="kpi-val" style="color:var(--blue)">${totalAvs2}</div><div class="kpi-lbl">Total de Avaliações</div><div class="kpi-icon">📊</div></div>
+      <div class="kpi-card"><div class="kpi-val" style="color:${avgAll>=70?'var(--green)':avgAll>=40?'var(--amber)':'var(--red)'}">${avgAll}%</div><div class="kpi-lbl">Maturidade Média Global</div><div class="kpi-icon">🎯</div></div>
+      <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">${stratCount}</div><div class="kpi-lbl">Nível Estratégico</div><div class="kpi-icon">🚀</div></div>
+      <div class="kpi-card"><div class="kpi-val" style="color:var(--red)">${riskCount}</div><div class="kpi-lbl">Nível Artesanal (Risco)</div><div class="kpi-icon">⚠️</div></div>
+    </div>
+    <div style="margin-top:16px;padding:14px;background:rgba(91,141,239,.04);border:1px solid rgba(91,141,239,.15);border-radius:var(--r);font-size:12.5px;color:var(--t2);line-height:1.7">
+      <strong style="color:var(--text)">Resumo Executivo:</strong> A base de avaliações conta com <strong style="color:var(--blue)">${totalAvs2}</strong> diagnóstico${totalAvs2!==1?'s':''} distribuídos em <strong style="color:var(--blue)">${[...new Set(DB.assessments.map(a=>a.companyId))].length}</strong> empresa${[...new Set(DB.assessments.map(a=>a.companyId))].length!==1?'s':''}.
+      ${avgAll>=70?'O portfólio apresenta maturidade satisfatória com espaço para evolução em inovação e práticas DevOps.':avgAll>=40?'O portfólio está em transição, com foco prioritário em padronização de processos ITSM e segurança.':'Atenção: nível de maturidade crítico. Ações imediatas em governança e segurança são essenciais.'}
+    </div>`;
+}
 
 // ── BOOT ──
 init();
